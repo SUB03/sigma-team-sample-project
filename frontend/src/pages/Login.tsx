@@ -26,18 +26,21 @@ export function Login() {
 
         try {
             console.log('start')
-            const response = await fetch('http://localhost:8001/user/login/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    // Add other headers if needed (e.g., Authorization)
-                },
-                body: JSON.stringify({
-                    username,
-                    email,
-                    password,
-                }),
-            })
+            const response = await fetch(
+                'http://localhost:8001/user/register/',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // Add other headers if needed (e.g., Authorization)
+                    },
+                    body: JSON.stringify({
+                        username,
+                        email,
+                        password,
+                    }),
+                }
+            )
             console.log('end')
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`)
