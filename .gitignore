@@ -1,1 +1,79 @@
-.venv
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.pyc
+*.pyo
+.venv/
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+/media
+/staticfiles
+/static
+*.pot
+migrations/__pycache__/
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Build outputs
+build/
+dist/
+.next/
+out/
+.cache/
+.parcel-cache/
+
+# Testing
+coverage/
+.nyc_output/
+.pytest_cache/
+.tox/
+htmlcov/
+.coverage
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+*.iml
+
+# OS
+.DS_Store
+._*
+Thumbs.db
+ehthumbs.db
+
+# Environment
+.env
+.env.local
+.env.*.local
+*.local
+
+# Database
+*.sqlite
+*.db
+
+# Docker
+*.log
+
+# Backup files
+*.bak
+*.backup
+*.tmp
+*.temp

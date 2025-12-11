@@ -1,1 +1,0 @@
-# sigma-team-sample-project

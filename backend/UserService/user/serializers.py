@@ -31,10 +31,3 @@ class CustomUserSerializer(serializers.ModelSerializer):
             instance.save()
         return instance
 
-    def validate_password(self, value):
-        """Дополнительная валидация пароля (пример)"""
-        if len(value) < 8 or not any(char.isdigit() for char in value):
-            raise serializers.ValidationError(
-                "Пароль должен быть не менее 8 символов и содержать хотя бы одну цифру."
-            )
-        return value
