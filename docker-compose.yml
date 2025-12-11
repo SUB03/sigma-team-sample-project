@@ -27,7 +27,7 @@ services:
       dockerfile: Dockerfile
     container_name: sigma_user_service
     environment:
-      DEBUG: "False"
+      DEBUG: "True"
       SECRET_KEY: "your-secret-key-change-in-production"
       DB_NAME: "sigma_db"
       DB_USER: "sigma_user"
