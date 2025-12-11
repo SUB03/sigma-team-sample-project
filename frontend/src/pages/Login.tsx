@@ -20,12 +20,12 @@ export function Login() {
         setPassword(event.target.value)
     }
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
+    const handleSubmit = async () => {
         setLoading(true)
         setError('')
 
         try {
+            console.log('start')
             const response = await fetch('http://localhost:8001/user/login/', {
                 method: 'POST',
                 headers: {
@@ -38,7 +38,7 @@ export function Login() {
                     password,
                 }),
             })
-
+            console.log('end')
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`)
             }
@@ -67,7 +67,7 @@ export function Login() {
                 password: <input name="myInput" onChange={handlePassword} />
             </label>
 
-            <Button onClick={() => handleSubmit} disabled={loading}>
+            <Button onClick={handleSubmit}>
                 {loading ? 'Loading...' : 'Login'}
             </Button>
         </>
