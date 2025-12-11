@@ -1,10 +1,16 @@
-import ListGroup from './components/ListGroup'
+import './App.css'
+import { HashRouter, Routes, Route } from 'react-router-dom'
+import { Home } from './pages/Home'
+import { Login } from './pages/Login'
 
 function App() {
     return (
-        <div>
-            <ListGroup />
-        </div>
+        <HashRouter>
+            <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/login" element={<Login />} />
+            </Routes>
+        </HashRouter>
     )
 }
 
