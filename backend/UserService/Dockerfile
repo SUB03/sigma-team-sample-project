@@ -25,7 +25,6 @@ RUN mkdir -p /app/staticfiles
 # Открываем порт
 EXPOSE 8000
 
-# Запускаем миграции и сервер
 CMD python manage.py migrate && \
     python manage.py collectstatic --noinput && \
     gunicorn sigmabackend.wsgi:application --bind 0.0.0.0:8000
