@@ -121,3 +121,11 @@ class LogoutAPIView(APIView):
                 {"error": "Ошибка при выходе", "details": str(e)},
                 status=status.HTTP_400_BAD_REQUEST
             )
+
+class ShowUsersAPIView(APIView):
+    """API endpoint для получения списка всех пользователей"""
+
+    def get(self, request):
+        users = User.objects.all()
+        serializer = CustomUserSerializer(users, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
