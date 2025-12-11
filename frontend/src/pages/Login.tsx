@@ -56,6 +56,7 @@ export function Login() {
 
     return (
         <>
+            {error && <div style={{ color: 'red' }}>{error}</div>}
             <label>
                 user name: <input name="myInput" onChange={handleUsername} />
             </label>
@@ -66,7 +67,9 @@ export function Login() {
                 password: <input name="myInput" onChange={handlePassword} />
             </label>
 
-            <Button onClick={() => handleSubmit}>Login</Button>
+            <Button onClick={() => handleSubmit} disabled={loading}>
+                {loading ? 'Loading...' : 'Login'}
+            </Button>
         </>
     )
 }
