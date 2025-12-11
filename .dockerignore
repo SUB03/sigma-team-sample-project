@@ -1,0 +1,27 @@
+# General
+.git/
+.gitignore
+*.md
+LICENSE
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Node
+node_modules/
+npm-debug.log
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
