@@ -1,12 +1,11 @@
 from django.shortcuts import render
-from django.contrib.auth.hashers import check_password
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import CustomUserSerializer
 from .models import User
-
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 class RegistrationAPIView(APIView):
     """API endpoint для регистрации новых пользователей"""
@@ -19,32 +18,30 @@ class RegistrationAPIView(APIView):
             
             # Создание JWT токенов
             refresh = RefreshToken.for_user(user)
-            refresh.payload.update(
-                {
-                    "user_id": user.id,
-                    "username": user.username,
-                    "email": user.email,
-                }
-            )
+            refresh.payload.update({
+                'user_id': user.id,
+                'username': user.username,
+                'email': user.email,
+            })
 
             return Response(
                 {
-                    "message": "Пользователь успешно зарегистрирован",
-                    "user": {
-                        "id": user.id,
-                        "username": user.username,
-                        "email": user.email,
+                    'message': 'Пользователь успешно зарегистрирован',
+                    'user': {
+                        'id': user.id,
+                        'username': user.username,
+                        'email': user.email,
                     },
-                    "refresh": str(refresh),
-                    "access": str(refresh.access_token),
+                    'refresh': str(refresh),
+                    'access': str(refresh.access_token),
                 },
                 status=status.HTTP_201_CREATED,
             )
         
         return Response(
             {
-                "error": "Ошибка валидации данных",
-                "details": serializer.errors,
+                'error': 'Ошибка валидации данных',
+                'details': serializer.errors,
             },
             status=status.HTTP_400_BAD_REQUEST,
         )
@@ -75,7 +72,7 @@ class LoginAPIView(APIView):
                 )
 
         # Проверка пароля
-        if not check_password(password, user.password):
+        if not user.check_password(password):
             return Response(
                 {'error': 'Неверные учетные данные'},
                 status=status.HTTP_401_UNAUTHORIZED
@@ -105,6 +102,7 @@ class LoginAPIView(APIView):
 
 class LogoutAPIView(APIView):
     """API endpoint для выхода пользователей"""
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         try:
@@ -123,7 +121,8 @@ class LogoutAPIView(APIView):
             )
 
 class ShowUsersAPIView(APIView):
-    """API endpoint для получения списка всех пользователей"""
+    """API endpoint для получения списка всех пользователей (только для админов)"""
+    #permission_classes = [IsAuthenticated, IsAdminUser]
 
     def get(self, request):
         users = User.objects.all()
