@@ -4,8 +4,10 @@ import Button from '../components/Button'
 export function Home() {
     return (
         <>
-            <Link to="/login">
-                <Button onClick={() => console.log('clicked')}>Login</Button>
+            <Link to="/sign_in">
+                <Button onClick={() => console.log('clicked')}>
+                    authorization
+                </Button>
             </Link>
         </>
     )
