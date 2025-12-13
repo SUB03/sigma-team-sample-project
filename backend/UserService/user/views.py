@@ -131,7 +131,7 @@ class ShowUsersAPIView(APIView):
 
 class UserProfileAPIView(APIView):
     """API endpoint для получения и обновления профиля пользователя"""
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         serializer = CustomUserSerializer(request.user)
