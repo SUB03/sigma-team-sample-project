@@ -5,7 +5,6 @@ export interface UserSignUpData {
 }
 
 export interface UserSignInData {
-    username: string
-    email: string
+    username: string // email or login
     password: string
 }

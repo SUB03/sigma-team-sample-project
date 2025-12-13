@@ -6,7 +6,6 @@ import { useSignInMutation } from '../components/authMutations'
 export const Sign_in = () => {
     const [formData, setFormData] = useState<UserSignInData>({
         username: '',
-        email: '',
         password: '',
     })
 
@@ -39,19 +38,6 @@ export const Sign_in = () => {
                         name="username"
                         onChange={handleInputChange}
                         placeholder="Sigma"
-                        disabled={registerMutation.isPending}
-                        required
-                    />
-                </label>
-                <br />
-
-                <label>
-                    email_address:{' '}
-                    <input
-                        name="email"
-                        type="email"
-                        onChange={handleInputChange}
-                        placeholder="Sigma@gmail.com"
                         disabled={registerMutation.isPending}
                         required
                     />
