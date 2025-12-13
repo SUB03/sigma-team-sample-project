@@ -56,7 +56,7 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
-    "ACCESS_TOKEN_LIFETIME": timedelta(hours=int(os.environ.get('ACCESS_TOKEN_MAX_AGE', 24*10))),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=int(os.environ.get('ACCESS_TOKEN_MAX_AGE', 15))),
     "REFRESH_TOKEN_LIFETIME": timedelta(hours=int(os.environ.get('REFRESH_TOKEN_MAX_AGE', 24*30))),
 }
 MIDDLEWARE = [
