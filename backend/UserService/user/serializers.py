@@ -12,7 +12,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ["id", "username", "email", "password", "photo", "description", "sex", "age"]
-        read_only_fields = ["id"],
+        read_only_fields = ["id"]
 
     def create(self, validated_data):
         """Создание пользователя с хешированным паролем"""
