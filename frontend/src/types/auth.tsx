@@ -8,3 +8,14 @@ export interface UserSignInData {
     username: string // email or login
     password: string
 }
+
+export interface AuthResponse {
+    access: string
+    refresh: string
+    message?: string
+    user?: {
+        id: number
+        username: string
+        email: string
+    }
+}

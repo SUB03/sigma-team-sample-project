@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import type { UserSignInData } from '../types/auth'
-import { useSignInMutation } from '../components/authMutations'
+import type { AuthResponse, UserSignInData } from '../types/auth'
+import { useSignInMutation } from '../mutations/authMutations'
+import { useAuthTokens } from '../hooks/saveAuthTokens'
 
 export const Sign_in = () => {
     const [formData, setFormData] = useState<UserSignInData>({
@@ -9,7 +10,8 @@ export const Sign_in = () => {
         password: '',
     })
 
-    const registerMutation = useSignInMutation()
+    const authorizationMutation = useSignInMutation()
+    const { saveAuthTokens } = useAuthTokens()
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target
@@ -21,15 +23,22 @@ export const Sign_in = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault() // Prevent page refresh
-        registerMutation.mutate(formData)
+
+        try {
+            const response: AuthResponse =
+                await authorizationMutation.mutateAsync(formData)
+            saveAuthTokens(response)
+        } catch (error) {
+            console.error('Registration failed:', error)
+        }
     }
 
     return (
         <>
             <form onSubmit={handleSubmit}>
-                {registerMutation.error && (
+                {authorizationMutation.error && (
                     <div style={{ color: 'red', marginBottom: '10px' }}>
-                        {registerMutation.error?.message}
+                        {authorizationMutation.error?.message}
                     </div>
                 )}
                 <label>
@@ -38,7 +47,7 @@ export const Sign_in = () => {
                         name="username"
                         onChange={handleInputChange}
                         placeholder="Sigma"
-                        disabled={registerMutation.isPending}
+                        disabled={authorizationMutation.isPending}
                         required
                     />
                 </label>
@@ -51,14 +60,19 @@ export const Sign_in = () => {
                         type="password"
                         onChange={handleInputChange}
                         placeholder="12345678"
-                        disabled={registerMutation.isPending}
+                        disabled={authorizationMutation.isPending}
                         required
                     />
                 </label>
                 <br />
 
-                <button type="submit" disabled={registerMutation.isPending}>
-                    {registerMutation.isPending ? 'Signing in...' : 'Sign in'}
+                <button
+                    type="submit"
+                    disabled={authorizationMutation.isPending}
+                >
+                    {authorizationMutation.isPending
+                        ? 'Signing in...'
+                        : 'Sign in'}
                 </button>
                 <Link to="/sign_up">
                     <button onClick={() => console.log('clicked')}>
