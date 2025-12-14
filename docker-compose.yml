@@ -5,11 +5,12 @@ services:
     image: postgres:15-alpine
     container_name: sigma_postgres
     environment:
-      POSTGRES_DB: sigma_db
+      POSTGRES_DB: user_db
       POSTGRES_USER: sigma_user
       POSTGRES_PASSWORD: sigma_password
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./docker-init/init-databases.sh:/docker-entrypoint-initdb.d/init-databases.sh
     networks:
       - sigma_network
     ports:
@@ -29,7 +30,8 @@ services:
     environment:
       DEBUG: "True"
       SECRET_KEY: "your-secret-key-change-in-production"
-      DB_NAME: "sigma_db"
+      JWT_SECRET_KEY: "shared-jwt-secret-key-for-all-services-change-in-production"
+      DB_NAME: "user_db"
       DB_USER: "sigma_user"
       DB_PASSWORD: "sigma_password"
       DB_HOST: "db"
@@ -47,27 +49,63 @@ services:
       - ./backend/UserService:/app
     restart: unless-stopped
 
-  # Course Service (Сервис курсов) - заглушка для будущего использования
-  # course-service:
-  #   build:
-  #     context: ./backend/CourseService
-  #     dockerfile: Dockerfile
-  #   container_name: sigma_course_service
-  #   environment:
-  #     DEBUG: "False"
-  #     SECRET_KEY: "your-secret-key-change-in-production"
-  #     DATABASE_URL: "postgresql://sigma_user:sigma_password@db:5432/sigma_db"
-  #     USER_SERVICE_URL: "http://user-service:8000"
-  #   depends_on:
-  #     db:
-  #       condition: service_healthy
-  #     user-service:
-  #       condition: service_started
-  #   networks:
-  #     - sigma_network
-  #   ports:
-  #     - "8002:8000"
-  #   restart: unless-stopped
+  # Purchase Service (Сервис покупок)
+  purchase-service:
+    build:
+      context: ./backend/PurchaseService
+      dockerfile: Dockerfile
+    container_name: sigma_purchase_service
+    environment:
+      DEBUG: "True"
+      SECRET_KEY: "your-purchase-secret-key-change-in-production"
+      JWT_SECRET_KEY: "shared-jwt-secret-key-for-all-services-change-in-production"
+      DB_NAME: "purchase_db"
+      DB_USER: "sigma_user"
+      DB_PASSWORD: "sigma_password"
+      DB_HOST: "db"
+      DB_PORT: "5432"
+      ALLOWED_HOSTS: "localhost,127.0.0.1,purchase-service"
+      USER_SERVICE_URL: "http://user-service:8000"
+      COURSE_SERVICE_URL: "http://course-service:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - sigma_network
+    ports:
+      - "8002:8000"
+    volumes:
+      - ./backend/PurchaseService:/app
+    restart: unless-stopped
+
+  # Course Service (Сервис курсов)
+  course-service:
+    build:
+      context: ./backend/CourseService
+      dockerfile: Dockerfile
+    container_name: sigma_course_service
+    environment:
+      DEBUG: "True"
+      SECRET_KEY: "your-course-secret-key-change-in-production"
+      JWT_SECRET_KEY: "shared-jwt-secret-key-for-all-services-change-in-production"
+      DB_NAME: "course_db"
+      DB_USER: "sigma_user"
+      DB_PASSWORD: "sigma_password"
+      DB_HOST: "db"
+      DB_PORT: "5432"
+      ALLOWED_HOSTS: "localhost,127.0.0.1,course-service"
+      USER_SERVICE_URL: "http://user-service:8000"
+      PURCHASE_SERVICE_URL: "http://purchase-service:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - sigma_network
+    ports:
+      - "8003:8000"
+    volumes:
+      - ./backend/CourseService:/app
+    restart: unless-stopped
 
   # Frontend (React + Vite)
   frontend:
