@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom'
-import Button from '../components/Button'
 import { getProfileQuery } from '../hooks/getProfileQuery'
 
 export const UserProfile = () => {
@@ -16,12 +15,12 @@ export const UserProfile = () => {
             <p>{data.description}</p>
             <image>{data.photo}</image>
             <br />
-            <Link to="/user/profile">
-                <Button
+            <Link to="/user/settings">
+                <button
                     onClick={() => console.log(`redirected to /user/profile`)}
                 >
                     Profile Settings
-                </Button>
+                </button>
             </Link>
         </>
     )

@@ -2,7 +2,6 @@ import { z } from 'zod'
 
 import { getProfileQuery } from '../hooks/getProfileQuery'
 import { useProfileChangeMutation } from '../mutations/useProfileChangeMutation'
-import { Await } from 'react-router-dom'
 
 const userSchema = z.object({
     username: z.string().optional(),
