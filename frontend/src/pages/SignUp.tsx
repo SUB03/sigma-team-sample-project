@@ -3,7 +3,7 @@ import type { UserSignUpData, AuthResponse } from '../types/auth'
 import { useSignUpMutation } from '../mutations/authMutations'
 import { useAuthTokens } from '../hooks/saveAuthTokens'
 
-export function Sign_up() {
+export function SignUp() {
     const { saveAuthTokens } = useAuthTokens()
 
     const [formData, setFormData] = useState<UserSignUpData>({

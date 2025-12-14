@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+import Button from '../components/Button'
 import { getProfileQuery } from '../hooks/getProfileQuery'
 
 export const UserProfile = () => {
@@ -6,13 +8,21 @@ export const UserProfile = () => {
     if (isLoading) return <div>Loading...</div>
     if (error) return <div>Error: {error.message}</div>
     return (
-        <div>
+        <>
             <h1>{data.username}</h1>
             <p>{data.email}</p>
             <p>{data.sex}</p>
             <p>{data.age}</p>
             <p>{data.description}</p>
             <image>{data.photo}</image>
-        </div>
+            <br />
+            <Link to="/user/profile">
+                <Button
+                    onClick={() => console.log(`redirected to /user/profile`)}
+                >
+                    Profile Settings
+                </Button>
+            </Link>
+        </>
     )
 }

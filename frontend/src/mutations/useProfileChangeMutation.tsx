@@ -1,34 +1,33 @@
 import { useMutation } from '@tanstack/react-query'
 import { base_url } from '../constants/api'
+import type { UserProfileData } from '../types/userProfileData'
 import { useCookies } from 'react-cookie'
 
-export const useLogout = () => {
-    const [cookie] = useCookies(['access_token', 'refresh_token'])
+export const useProfileChangeMutation = () => {
+    const [cookie] = useCookies(['access_token'])
     return useMutation({
-        mutationFn: async () => {
-            const response = await fetch(`${base_url}/user/logout/`, {
-                method: 'POST',
+        mutationFn: async (userData: UserProfileData) => {
+            const response = await fetch(`${base_url}/user/profile/`, {
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${cookie.access_token}`,
                 },
-                body: JSON.stringify({ refresh: cookie.refresh_token }),
+                body: JSON.stringify(userData),
             })
 
             if (!response.ok) {
-                console.log('hmmm....')
-                console.log(response)
-                throw new Error('logout failed')
+                throw new Error('profile update failed')
             }
 
             return await response.json()
         },
         onSuccess: (data) => {
-            console.log('logout successful:', data)
+            console.log('profile update successful:', data)
             // Handle successful registration (redirect, show message, etc.)
         },
         onError: (error: Error) => {
-            console.error('logout error:', error)
+            console.error('profile update error:', error)
             // Handle error (show error message, etc.)
         },
     })

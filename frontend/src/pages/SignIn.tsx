@@ -4,7 +4,7 @@ import type { AuthResponse, UserSignInData } from '../types/auth'
 import { useSignInMutation } from '../mutations/authMutations'
 import { useAuthTokens } from '../hooks/saveAuthTokens'
 
-export const Sign_in = () => {
+export const SignIn = () => {
     const [formData, setFormData] = useState<UserSignInData>({
         username: '',
         password: '',

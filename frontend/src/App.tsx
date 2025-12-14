@@ -1,13 +1,16 @@
 import './App.css'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { CookiesProvider } from 'react-cookie'
-import { HashRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+
+import ProtectedRoute from './routeComponents/ProtectedRoute'
+import PublicRoute from './routeComponents/PublicRoute'
 
 import { Home } from './pages/Home'
-import { Sign_up } from './pages/Sign_up'
-import { Sign_in } from './pages/Sign_in'
+import { SignIn } from './pages/SignIn'
+import { SignUp } from './pages/SignUp'
+import { UserSettings } from './pages/UserSettings'
 import { UserProfile } from './pages/UserProfile'
-import RouteGuard from './components/routeGuard'
 
 const queryClient = new QueryClient()
 
@@ -15,35 +18,27 @@ function App() {
     return (
         <CookiesProvider>
             <QueryClientProvider client={queryClient}>
-                <HashRouter>
+                <BrowserRouter>
                     <Routes>
+                        {/* public routes */}
                         <Route path="/" element={<Home />} />
-                        <Route
-                            path="/sign_up"
-                            element={
-                                <RouteGuard isLoginRoute>
-                                    <Sign_up />
-                                </RouteGuard>
-                            }
-                        />
-                        <Route
-                            path="/sign_in"
-                            element={
-                                <RouteGuard isLoginRoute>
-                                    <Sign_in />
-                                </RouteGuard>
-                            }
-                        />
-                        <Route
-                            path="/user"
-                            element={
-                                <RouteGuard>
-                                    <UserProfile />
-                                </RouteGuard>
-                            }
-                        />
+
+                        {/* if user is unauthentificated they cannot access these */}
+                        <Route element={<ProtectedRoute />}>
+                            <Route path="/user" element={<UserProfile />} />
+                            <Route
+                                path="/user/settings"
+                                element={<UserSettings />}
+                            />
+                        </Route>
+
+                        {/* if user is authentificated they cannot access these */}
+                        <Route element={<PublicRoute />}>
+                            <Route path="/sign_in" element={<SignIn />} />
+                            <Route path="/sign_up" element={<SignUp />} />
+                        </Route>
                     </Routes>
-                </HashRouter>
+                </BrowserRouter>
             </QueryClientProvider>
         </CookiesProvider>
     )

@@ -4,7 +4,10 @@ import { useCookies } from 'react-cookie'
 import { useLogout } from '../mutations/logoutMutation'
 
 export function Home() {
-    const [cookies] = useCookies(['access_token', 'refresh_token'])
+    const [cookies, , removeCookie] = useCookies([
+        'access_token',
+        'refresh_token',
+    ])
 
     const logged_in = cookies.access_token
     const destination = logged_in ? '/user' : '/sign_in'
@@ -15,6 +18,9 @@ export function Home() {
         e.preventDefault()
         registerMutation.mutateAsync()
         console.log('removed')
+
+        removeCookie('access_token', { path: '/' })
+        removeCookie('refresh_token', { path: '/' })
     }
 
     return (
