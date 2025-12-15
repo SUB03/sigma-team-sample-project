@@ -1,5 +1,6 @@
 import axios from 'axios'
-import { base_url } from './constants/api'
+export const base_url = 'http://localhost:8001'
+export const course_url = "http://localhost:8003"
 
 export const $api = axios.create({
     withCredentials: true,

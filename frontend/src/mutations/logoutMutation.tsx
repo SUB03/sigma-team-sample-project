@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
-import { base_url } from '../constants/api'
 import { useCookies } from 'react-cookie'
+import { base_url } from '../api'
 
 export const useLogout = () => {
     const [cookie] = useCookies(['access_token', 'refresh_token'])

@@ -26,7 +26,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
         if (cookie.refresh_token) {
             fetchToken(cookie.refresh_token)
-        } else {
         }
     }, [])
 
@@ -34,7 +33,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         console.log(`ejected ${cookie.access_token}`)
         const authIntercept = $api.interceptors.request.use((config: any) => {
             config.headers.Authorization =
-                !config._retry && cookie.access_token
+                !config._retry && cookie.access_token && !config.skipAuth
                     ? `Bearer ${cookie.access_token}`
                     : config.headers.Authorization
             return config

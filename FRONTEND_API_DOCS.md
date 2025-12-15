@@ -33,11 +33,13 @@
 ### Сервисы:
 
 1. **User Service** (http://localhost:8001) - управление пользователями и JWT аутентификация
+
    - База данных: `user_db`
    - Генерирует JWT токены с общим секретным ключом
    - Blacklist для токенов при logout
 
 2. **Course Service** (http://localhost:8003) - управление курсами
+
    - База данных: `course_db`
    - Валидирует JWT токены от User Service
    - CRUD операции с курсами
@@ -58,20 +60,20 @@
 **POST** `/user/register/`
 
 ```javascript
-const response = await fetch('http://localhost:8001/user/register/', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-        username: 'john_doe',
-        email: 'john@example.com',
-        password: 'Password123',
-        photo: null,              // опционально
-        description: 'About me',   // опционально
-        sex: 'male',              // опционально
-        age: 25                   // опционально
-    })
+const response = await fetch("http://localhost:8001/user/register/", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    username: "john_doe",
+    email: "john@example.com",
+    password: "Password123",
+    photo: null, // опционально
+    description: "About me", // опционально
+    sex: "male", // опционально
+    age: 25, // опционально
+  }),
 });
 
 const data = await response.json();
@@ -84,8 +86,8 @@ const data = await response.json();
 // }
 
 // Сохраните токены!
-localStorage.setItem('access_token', data.access);
-localStorage.setItem('refresh_token', data.refresh);
+localStorage.setItem("access_token", data.access);
+localStorage.setItem("refresh_token", data.refresh);
 ```
 
 ### 1.2. Вход
@@ -93,21 +95,21 @@ localStorage.setItem('refresh_token', data.refresh);
 **POST** `/user/login/`
 
 ```javascript
-const response = await fetch('http://localhost:8001/user/login/', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-        username: 'john_doe',  // или email
-        password: 'Password123'
-    })
+const response = await fetch("http://localhost:8001/user/login/", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    username: "john_doe", // или email
+    password: "Password123",
+  }),
 });
 
 const data = await response.json();
 // Сохраните токены
-localStorage.setItem('access_token', data.access);
-localStorage.setItem('refresh_token', data.refresh);
+localStorage.setItem("access_token", data.access);
+localStorage.setItem("refresh_token", data.refresh);
 ```
 
 ### 1.3. Выход
@@ -117,23 +119,23 @@ localStorage.setItem('refresh_token', data.refresh);
 **Важно:** Этот endpoint блокирует оба токена (access и refresh) для повышенной безопасности.
 
 ```javascript
-await fetch('http://localhost:8001/user/logout/', {
-    method: 'POST',
-    headers: {
-        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-        'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-        refresh: localStorage.getItem('refresh_token')
-    })
+await fetch("http://localhost:8001/user/logout/", {
+  method: "POST",
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    refresh: localStorage.getItem("refresh_token"),
+  }),
 });
 
 // Response: { "message": "Выход выполнен успешно" }
 // Status: 205 Reset Content
 
 // Удалите токены
-localStorage.removeItem('access_token');
-localStorage.removeItem('refresh_token');
+localStorage.removeItem("access_token");
+localStorage.removeItem("refresh_token");
 ```
 
 ### 1.4. Получить профиль
@@ -163,19 +165,19 @@ const response = await fetch('http://localhost:8001/user/profile/', {
 **Поддерживается частичное обновление (partial=True)**
 
 ```javascript
-const response = await fetch('http://localhost:8001/user/profile/', {
-    method: 'PUT',
-    headers: {
-        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-        'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-        email: 'newemail@example.com',  // опционально
-        description: 'New bio',          // опционально
-        photo: 'https://...',            // опционально
-        sex: 'female',                   // опционально
-        age: 30                          // опционально
-    })
+const response = await fetch("http://localhost:8001/user/profile/", {
+  method: "PUT",
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    email: "newemail@example.com", // опционально
+    description: "New bio", // опционально
+    photo: "https://...", // опционально
+    sex: "female", // опционально
+    age: 30, // опционально
+  }),
 });
 
 const data = await response.json();
@@ -189,7 +191,7 @@ const data = await response.json();
 **Примечание:** Текущая реализация не требует аутентификации, но в production должна быть защищена.
 
 ```javascript
-const response = await fetch('http://localhost:8001/user/users/');
+const response = await fetch("http://localhost:8001/user/users/");
 const users = await response.json();
 // Response: массив всех пользователей
 ```
@@ -235,6 +237,7 @@ localStorage.setItem('access_token', data.access);
 **GET** `/courses/`
 
 **Query параметры:**
+
 - `difficulty` - beginner, intermediate, advanced
 - `min_price` - минимальная цена
 - `max_price` - максимальная цена
@@ -243,11 +246,11 @@ localStorage.setItem('access_token', data.access);
 
 ```javascript
 // Все курсы
-const response = await fetch('http://localhost:8003/courses/');
+const response = await fetch("http://localhost:8003/courses/");
 
 // С фильтрами
 const response = await fetch(
-    'http://localhost:8003/courses/?difficulty=beginner&max_price=5000&sort_by=-popularity'
+  "http://localhost:8003/courses/?difficulty=beginner&max_price=5000&sort_by=-popularity"
 );
 
 const data = await response.json();
@@ -277,7 +280,7 @@ const data = await response.json();
 **GET** `/courses/<course_id>/`
 
 ```javascript
-const response = await fetch('http://localhost:8003/courses/1/');
+const response = await fetch("http://localhost:8003/courses/1/");
 const course = await response.json();
 // { "id": 1, "title": "...", "description": "...", ... }
 ```
@@ -287,10 +290,11 @@ const course = await response.json();
 **GET** `/courses/popular/`
 
 **Query параметры:**
-- `limit` - количество курсов (по умолчанию 10)
+
+- `limit` - количество курсов (по умолчанию 5)
 
 ```javascript
-const response = await fetch('http://localhost:8003/courses/popular/?limit=5');
+const response = await fetch("http://localhost:8003/courses/popular/?limit=5");
 const data = await response.json();
 // { "count": 5, "courses": [...] }
 ```
@@ -302,22 +306,22 @@ const data = await response.json();
 **Примечание:** В production должна быть проверка на роль админа.
 
 ```javascript
-const response = await fetch('http://localhost:8003/courses/create/', {
-    method: 'POST',
-    headers: {
-        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-        'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-        title: 'Новый курс',
-        description: 'Описание курса',
-        price: 4999.00,
-        difficulty_level: 'intermediate',  // beginner, intermediate, advanced
-        duration_hours: 30,
-        is_limited: false,
-        quantity: null,  // null если не ограничен
-        popularity: 0    // по умолчанию 0
-    })
+const response = await fetch("http://localhost:8003/courses/create/", {
+  method: "POST",
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    title: "Новый курс",
+    description: "Описание курса",
+    price: 4999.0,
+    difficulty_level: "intermediate", // beginner, intermediate, advanced
+    duration_hours: 30,
+    is_limited: false,
+    quantity: null, // null если не ограничен
+    popularity: 0, // по умолчанию 0
+  }),
 });
 
 const data = await response.json();
@@ -334,22 +338,22 @@ const data = await response.json();
 
 ```javascript
 // Полное обновление (PUT)
-const response = await fetch('http://localhost:8003/courses/1/update/', {
-    method: 'PUT',
-    headers: {
-        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-        'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-        title: 'Обновленное название',
-        description: 'Новое описание',
-        price: 5999.00,
-        difficulty_level: 'advanced',
-        duration_hours: 50,
-        is_limited: true,
-        quantity: 100,
-        popularity: 250
-    })
+const response = await fetch("http://localhost:8003/courses/1/update/", {
+  method: "PUT",
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    title: "Обновленное название",
+    description: "Новое описание",
+    price: 5999.0,
+    difficulty_level: "advanced",
+    duration_hours: 50,
+    is_limited: true,
+    quantity: 100,
+    popularity: 250,
+  }),
 });
 
 const data = await response.json();
@@ -360,16 +364,16 @@ const data = await response.json();
 // }
 
 // Частичное обновление (PATCH)
-await fetch('http://localhost:8003/courses/1/update/', {
-    method: 'PATCH',
-    headers: {
-        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-        'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-        price: 5999.00,  // только цена
-        popularity: 300  // и популярность
-    })
+await fetch("http://localhost:8003/courses/1/update/", {
+  method: "PATCH",
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    price: 5999.0, // только цена
+    popularity: 300, // и популярность
+  }),
 });
 // Response: то же, что и для PUT
 ```
@@ -379,11 +383,11 @@ await fetch('http://localhost:8003/courses/1/update/', {
 **DELETE** `/courses/<course_id>/delete/`
 
 ```javascript
-const response = await fetch('http://localhost:8003/courses/1/delete/', {
-    method: 'DELETE',
-    headers: {
-        'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-    }
+const response = await fetch("http://localhost:8003/courses/1/delete/", {
+  method: "DELETE",
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+  },
 });
 
 const data = await response.json();
@@ -404,16 +408,16 @@ const data = await response.json();
 **POST** `/purchase/create/`
 
 ```javascript
-const response = await fetch('http://localhost:8002/purchase/create/', {
-    method: 'POST',
-    headers: {
-        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-        'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-        course_id: 1,
-        payment_method: 'card'  // опционально
-    })
+const response = await fetch("http://localhost:8002/purchase/create/", {
+  method: "POST",
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    course_id: 1,
+    payment_method: "card", // опционально
+  }),
 });
 
 const data = await response.json();
@@ -433,6 +437,7 @@ const data = await response.json();
 ```
 
 **Ошибки:**
+
 - `400` - Вы уже купили этот курс
 - `404` - Курс не найден
 - `503` - Course Service недоступен
@@ -442,10 +447,10 @@ const data = await response.json();
 **GET** `/purchase/my-purchases/`
 
 ```javascript
-const response = await fetch('http://localhost:8002/purchase/my-purchases/', {
-    headers: {
-        'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-    }
+const response = await fetch("http://localhost:8002/purchase/my-purchases/", {
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+  },
 });
 
 const data = await response.json();
@@ -472,10 +477,10 @@ const data = await response.json();
 **GET** `/purchase/my-courses/`
 
 ```javascript
-const response = await fetch('http://localhost:8002/purchase/my-courses/', {
-    headers: {
-        'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-    }
+const response = await fetch("http://localhost:8002/purchase/my-courses/", {
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+  },
 });
 
 const data = await response.json();
@@ -490,10 +495,10 @@ const data = await response.json();
 **GET** `/purchase/check/<course_id>/`
 
 ```javascript
-const response = await fetch('http://localhost:8002/purchase/check/1/', {
-    headers: {
-        'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-    }
+const response = await fetch("http://localhost:8002/purchase/check/1/", {
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+  },
 });
 
 const data = await response.json();
@@ -511,10 +516,10 @@ const data = await response.json();
 **Примечание:** В production должна быть проверка на роль админа.
 
 ```javascript
-const response = await fetch('http://localhost:8002/purchase/all/', {
-    headers: {
-        'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-    }
+const response = await fetch("http://localhost:8002/purchase/all/", {
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+  },
 });
 
 const data = await response.json();
@@ -545,25 +550,27 @@ const data = await response.json();
 
 ```javascript
 // 1. Регистрация
-const registerResponse = await fetch('http://localhost:8001/user/register/', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-        username: 'newuser',
-        email: 'user@example.com',
-        password: 'Pass123'
-    })
+const registerResponse = await fetch("http://localhost:8001/user/register/", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    username: "newuser",
+    email: "user@example.com",
+    password: "Pass123",
+  }),
 });
 const { access, refresh } = await registerResponse.json();
-localStorage.setItem('access_token', access);
-localStorage.setItem('refresh_token', refresh);
+localStorage.setItem("access_token", access);
+localStorage.setItem("refresh_token", refresh);
 
 // 2. Получить список курсов
-const coursesResponse = await fetch('http://localhost:8003/courses/');
+const coursesResponse = await fetch("http://localhost:8003/courses/");
 const { courses } = await coursesResponse.json();
 
 // 3. Просмотр деталей курса
-const courseResponse = await fetch(`http://localhost:8003/courses/${courses[0].id}/`);
+const courseResponse = await fetch(
+  `http://localhost:8003/courses/${courses[0].id}/`
+);
 const course = await courseResponse.json();
 ```
 
@@ -571,26 +578,29 @@ const course = await courseResponse.json();
 
 ```javascript
 // 1. Проверить, не куплен ли уже курс
-const checkResponse = await fetch('http://localhost:8002/purchase/check/1/', {
-    headers: {
-        'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-    }
+const checkResponse = await fetch("http://localhost:8002/purchase/check/1/", {
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+  },
 });
 const { has_purchased } = await checkResponse.json();
 
 if (!has_purchased) {
-    // 2. Купить курс
-    const purchaseResponse = await fetch('http://localhost:8002/purchase/create/', {
-        method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ course_id: 1 })
-    });
-    
-    const result = await purchaseResponse.json();
-    console.log(result.message); // "Курс успешно куплен"
+  // 2. Купить курс
+  const purchaseResponse = await fetch(
+    "http://localhost:8002/purchase/create/",
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ course_id: 1 }),
+    }
+  );
+
+  const result = await purchaseResponse.json();
+  console.log(result.message); // "Курс успешно куплен"
 }
 ```
 
@@ -598,27 +608,31 @@ if (!has_purchased) {
 
 ```javascript
 // 1. Получить профиль пользователя
-const profileResponse = await fetch('http://localhost:8001/user/profile/', {
-    headers: {
-        'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-    }
+const profileResponse = await fetch("http://localhost:8001/user/profile/", {
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+  },
 });
 const profile = await profileResponse.json();
 
 // 2. Получить купленные курсы
-const purchasesResponse = await fetch('http://localhost:8002/purchase/my-purchases/', {
+const purchasesResponse = await fetch(
+  "http://localhost:8002/purchase/my-purchases/",
+  {
     headers: {
-        'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-    }
-});
+      Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+    },
+  }
+);
 const { purchases } = await purchasesResponse.json();
 
 // 3. Для каждой покупки получить данные курса
 const coursesData = await Promise.all(
-    purchases.map(purchase =>
-        fetch(`http://localhost:8003/courses/${purchase.course_id}/`)
-            .then(res => res.json())
+  purchases.map((purchase) =>
+    fetch(`http://localhost:8003/courses/${purchase.course_id}/`).then((res) =>
+      res.json()
     )
+  )
 );
 ```
 
@@ -630,70 +644,73 @@ const coursesData = await Promise.all(
 
 ```javascript
 async function fetchWithAuth(url, options = {}) {
-    const response = await fetch(url, {
+  const response = await fetch(url, {
+    ...options,
+    headers: {
+      ...options.headers,
+      Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+    },
+  });
+
+  // Если токен истек
+  if (response.status === 401) {
+    // Обновить токен
+    const refreshResponse = await fetch(
+      "http://localhost:8001/user/token/refresh/",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          refresh: localStorage.getItem("refresh_token"),
+        }),
+      }
+    );
+
+    if (refreshResponse.ok) {
+      const { access } = await refreshResponse.json();
+      localStorage.setItem("access_token", access);
+
+      // Повторить запрос
+      return fetch(url, {
         ...options,
         headers: {
-            ...options.headers,
-            'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-        }
-    });
-    
-    // Если токен истек
-    if (response.status === 401) {
-        // Обновить токен
-        const refreshResponse = await fetch('http://localhost:8001/user/token/refresh/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                refresh: localStorage.getItem('refresh_token')
-            })
-        });
-        
-        if (refreshResponse.ok) {
-            const { access } = await refreshResponse.json();
-            localStorage.setItem('access_token', access);
-            
-            // Повторить запрос
-            return fetch(url, {
-                ...options,
-                headers: {
-                    ...options.headers,
-                    'Authorization': `Bearer ${access}`
-                }
-            });
-        } else {
-            // Refresh токен тоже истек - перенаправить на login
-            localStorage.clear();
-            window.location.href = '/login';
-        }
+          ...options.headers,
+          Authorization: `Bearer ${access}`,
+        },
+      });
+    } else {
+      // Refresh токен тоже истек - перенаправить на login
+      localStorage.clear();
+      window.location.href = "/login";
     }
-    
-    return response;
+  }
+
+  return response;
 }
 
 // Использование
-const response = await fetchWithAuth('http://localhost:8001/user/profile/');
+const response = await fetchWithAuth("http://localhost:8001/user/profile/");
 ```
 
 ### Общая обработка ошибок
 
 ```javascript
 async function apiRequest(url, options = {}) {
-    try {
-        const response = await fetchWithAuth(url, options);
-        
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.error || 'Ошибка запроса');
-        }
-        
-        return await response.json();
-    } catch (error) {
-        console.error('API Error:', error);
-        // Показать уведомление пользователю
-        showNotification(error.message, 'error');
-        throw error;
+  try {
+    const response = await fetchWithAuth(url, options);
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || "Ошибка запроса");
     }
+
+    return await response.json();
+  } catch (error) {
+    console.error("API Error:", error);
+    // Показать уведомление пользователю
+    showNotification(error.message, "error");
+    throw error;
+  }
 }
 ```
 
@@ -711,6 +728,7 @@ async function apiRequest(url, options = {}) {
 ### Конфигурация:
 
 Все сервисы используют **общий `JWT_SECRET_KEY`** в переменных окружения:
+
 ```
 JWT_SECRET_KEY=shared-jwt-secret-key-for-all-services-change-in-production
 ```
@@ -753,172 +771,174 @@ SIMPLE_JWT = {
 ### useAuth Hook
 
 ```javascript
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 export function useAuth() {
-    const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
-    
-    useEffect(() => {
-        const token = localStorage.getItem('access_token');
-        if (token) {
-            fetchProfile();
-        } else {
-            setLoading(false);
-        }
-    }, []);
-    
-    const fetchProfile = async () => {
-        try {
-            const response = await fetch('http://localhost:8001/user/profile/', {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-                }
-            });
-            
-            if (response.ok) {
-                const data = await response.json();
-                setUser(data);
-            }
-        } catch (error) {
-            console.error('Failed to fetch profile:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
-    
-    const login = async (username, password) => {
-        const response = await fetch('http://localhost:8001/user/login/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password })
-        });
-        
-        if (response.ok) {
-            const data = await response.json();
-            localStorage.setItem('access_token', data.access);
-            localStorage.setItem('refresh_token', data.refresh);
-            setUser(data.user);
-            return true;
-        }
-        return false;
-    };
-    
-    const logout = async () => {
-        await fetch('http://localhost:8001/user/logout/', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                refresh: localStorage.getItem('refresh_token'),
-                access: localStorage.getItem('access_token')
-            })
-        });
-        
-        localStorage.clear();
-        setUser(null);
-    };
-    
-    return { user, loading, login, logout };
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    if (token) {
+      fetchProfile();
+    } else {
+      setLoading(false);
+    }
+  }, []);
+
+  const fetchProfile = async () => {
+    try {
+      const response = await fetch("http://localhost:8001/user/profile/", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setUser(data);
+      }
+    } catch (error) {
+      console.error("Failed to fetch profile:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const login = async (username, password) => {
+    const response = await fetch("http://localhost:8001/user/login/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      localStorage.setItem("access_token", data.access);
+      localStorage.setItem("refresh_token", data.refresh);
+      setUser(data.user);
+      return true;
+    }
+    return false;
+  };
+
+  const logout = async () => {
+    await fetch("http://localhost:8001/user/logout/", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        refresh: localStorage.getItem("refresh_token"),
+        access: localStorage.getItem("access_token"),
+      }),
+    });
+
+    localStorage.clear();
+    setUser(null);
+  };
+
+  return { user, loading, login, logout };
 }
 ```
 
 ### useCourses Hook
 
 ```javascript
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 export function useCourses(filters = {}) {
-    const [courses, setCourses] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    
-    useEffect(() => {
-        fetchCourses();
-    }, [JSON.stringify(filters)]);
-    
-    const fetchCourses = async () => {
-        try {
-            setLoading(true);
-            const queryString = new URLSearchParams(filters).toString();
-            const url = `http://localhost:8003/courses/${queryString ? '?' + queryString : ''}`;
-            
-            const response = await fetch(url);
-            const data = await response.json();
-            setCourses(data.courses);
-        } catch (err) {
-            setError(err.message);
-        } finally {
-            setLoading(false);
-        }
-    };
-    
-    return { courses, loading, error, refetch: fetchCourses };
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchCourses();
+  }, [JSON.stringify(filters)]);
+
+  const fetchCourses = async () => {
+    try {
+      setLoading(true);
+      const queryString = new URLSearchParams(filters).toString();
+      const url = `http://localhost:8003/courses/${
+        queryString ? "?" + queryString : ""
+      }`;
+
+      const response = await fetch(url);
+      const data = await response.json();
+      setCourses(data.courses);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { courses, loading, error, refetch: fetchCourses };
 }
 ```
 
 ### usePurchases Hook
 
 ```javascript
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 export function usePurchases() {
-    const [purchases, setPurchases] = useState([]);
-    const [purchasedIds, setPurchasedIds] = useState([]);
-    const [loading, setLoading] = useState(true);
-    
-    useEffect(() => {
-        fetchPurchases();
-    }, []);
-    
-    const fetchPurchases = async () => {
-        try {
-            const token = localStorage.getItem('access_token');
-            if (!token) return;
-            
-            const [purchasesRes, idsRes] = await Promise.all([
-                fetch('http://localhost:8002/purchase/my-purchases/', {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                }),
-                fetch('http://localhost:8002/purchase/my-courses/', {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                })
-            ]);
-            
-            const purchasesData = await purchasesRes.json();
-            const idsData = await idsRes.json();
-            
-            setPurchases(purchasesData.purchases);
-            setPurchasedIds(idsData.purchased_course_ids);
-        } catch (error) {
-            console.error('Failed to fetch purchases:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
-    
-    const purchaseCourse = async (courseId) => {
-        const response = await fetch('http://localhost:8002/purchase/create/', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ course_id: courseId })
-        });
-        
-        if (response.ok) {
-            await fetchPurchases(); // Обновить список
-            return true;
-        }
-        return false;
-    };
-    
-    const hasPurchased = (courseId) => purchasedIds.includes(courseId);
-    
-    return { purchases, purchasedIds, loading, purchaseCourse, hasPurchased };
+  const [purchases, setPurchases] = useState([]);
+  const [purchasedIds, setPurchasedIds] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchPurchases();
+  }, []);
+
+  const fetchPurchases = async () => {
+    try {
+      const token = localStorage.getItem("access_token");
+      if (!token) return;
+
+      const [purchasesRes, idsRes] = await Promise.all([
+        fetch("http://localhost:8002/purchase/my-purchases/", {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+        fetch("http://localhost:8002/purchase/my-courses/", {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+      ]);
+
+      const purchasesData = await purchasesRes.json();
+      const idsData = await idsRes.json();
+
+      setPurchases(purchasesData.purchases);
+      setPurchasedIds(idsData.purchased_course_ids);
+    } catch (error) {
+      console.error("Failed to fetch purchases:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const purchaseCourse = async (courseId) => {
+    const response = await fetch("http://localhost:8002/purchase/create/", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ course_id: courseId }),
+    });
+
+    if (response.ok) {
+      await fetchPurchases(); // Обновить список
+      return true;
+    }
+    return false;
+  };
+
+  const hasPurchased = (courseId) => purchasedIds.includes(courseId);
+
+  return { purchases, purchasedIds, loading, purchaseCourse, hasPurchased };
 }
 ```
 
@@ -940,6 +960,7 @@ docker-compose logs purchase-service
 ```
 
 **Адреса:**
+
 - Frontend: http://localhost:80
 - User Service: http://localhost:8001
 - Purchase Service: http://localhost:8002
@@ -947,6 +968,7 @@ docker-compose logs purchase-service
 - PostgreSQL: localhost:5433 (external), 5432 (internal)
 
 **Базы данных:**
+
 - `user_db` - пользователи, JWT токены
 - `course_db` - курсы
 - `purchase_db` - покупки
@@ -956,6 +978,7 @@ docker-compose logs purchase-service
 ## Поддержка
 
 При возникновении проблем проверьте:
+
 1. Запущены ли все контейнеры: `docker-compose ps`
 2. Логи сервисов: `docker-compose logs <service-name>`
 3. Правильность токенов в `localStorage`
