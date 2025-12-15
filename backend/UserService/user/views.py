@@ -151,31 +151,3 @@ class UserProfileAPIView(APIView):
             },
             status=status.HTTP_400_BAD_REQUEST,
         )
-
-class RefreshTokenAPIView(APIView):
-    """API endpoint для обновления JWT токенов"""
-
-    def post(self, request):
-        refresh_token = request.data.get('refresh')
-
-        if not refresh_token:
-            return Response(
-                {'error': 'Необходимо указать refresh токен'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        try:
-            refresh = RefreshToken(refresh_token)
-            new_access_token = str(refresh.access_token)
-
-            return Response(
-                {
-                    'access': new_access_token,
-                },
-                status=status.HTTP_200_OK
-            )
-        except Exception as e:
-            return Response(
-                {'error': 'Ошибка при обновлении токена', 'details': str(e)},
-                status=status.HTTP_400_BAD_REQUEST
-            )
