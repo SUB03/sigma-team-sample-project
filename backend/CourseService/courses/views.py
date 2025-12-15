@@ -159,7 +159,7 @@ class PopularCoursesAPIView(APIView):
     
     def get(self, request):
         """Получить топ популярных курсов"""
-        limit = int(request.query_params.get('limit', 10))
+        limit = int(request.query_params.get('limit', 5))
         courses = Course.objects.order_by('-popularity')[:limit]
         serializer = CourseSerializer(courses, many=True)
         

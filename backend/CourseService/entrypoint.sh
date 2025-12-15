@@ -16,6 +16,9 @@ else:
     print('Superuser already exists')
 END
 
+echo "Loading initial courses data..."
+python manage.py loaddata courses/fixtures/initial_courses.json || echo "Courses already loaded or fixture not found"
+
 echo "Collecting static files..."
 python manage.py collectstatic --noinput
 

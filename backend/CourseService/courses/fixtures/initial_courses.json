@@ -1,0 +1,162 @@
+[
+  {
+    "model": "courses.course",
+    "pk": 1,
+    "fields": {
+      "title": "Python для начинающих",
+      "description": "Изучите основы программирования на Python с нуля. Курс покрывает базовый синтаксис, типы данных, функции и ООП.",
+      "price": "2999.00",
+      "difficulty_level": "beginner",
+      "duration_hours": 40,
+      "popularity": 350,
+      "is_limited": false,
+      "quantity": null,
+      "created_at": "2025-12-01T10:00:00Z",
+      "updated_at": "2025-12-01T10:00:00Z"
+    }
+  },
+  {
+    "model": "courses.course",
+    "pk": 2,
+    "fields": {
+      "title": "Django REST Framework",
+      "description": "Профессиональная разработка REST API на Django. Аутентификация, сериализация, viewsets, permissions.",
+      "price": "4999.00",
+      "difficulty_level": "intermediate",
+      "duration_hours": 60,
+      "popularity": 280,
+      "is_limited": false,
+      "quantity": null,
+      "created_at": "2025-12-02T10:00:00Z",
+      "updated_at": "2025-12-02T10:00:00Z"
+    }
+  },
+  {
+    "model": "courses.course",
+    "pk": 3,
+    "fields": {
+      "title": "Микросервисная архитектура",
+      "description": "Проектирование и разработка микросервисов. Docker, Kubernetes, API Gateway, межсервисная коммуникация.",
+      "price": "7999.00",
+      "difficulty_level": "advanced",
+      "duration_hours": 80,
+      "popularity": 195,
+      "is_limited": true,
+      "quantity": 50,
+      "created_at": "2025-12-03T10:00:00Z",
+      "updated_at": "2025-12-03T10:00:00Z"
+    }
+  },
+  {
+    "model": "courses.course",
+    "pk": 4,
+    "fields": {
+      "title": "JavaScript и React",
+      "description": "Современная frontend разработка с React. Hooks, состояние, роутинг, работа с API.",
+      "price": "3999.00",
+      "difficulty_level": "intermediate",
+      "duration_hours": 50,
+      "popularity": 420,
+      "is_limited": false,
+      "quantity": null,
+      "created_at": "2025-12-04T10:00:00Z",
+      "updated_at": "2025-12-04T10:00:00Z"
+    }
+  },
+  {
+    "model": "courses.course",
+    "pk": 5,
+    "fields": {
+      "title": "PostgreSQL: от новичка до профи",
+      "description": "Полное руководство по PostgreSQL: запросы, индексы, оптимизация, репликация, резервное копирование.",
+      "price": "4499.00",
+      "difficulty_level": "intermediate",
+      "duration_hours": 55,
+      "popularity": 210,
+      "is_limited": false,
+      "quantity": null,
+      "created_at": "2025-12-05T10:00:00Z",
+      "updated_at": "2025-12-05T10:00:00Z"
+    }
+  },
+  {
+    "model": "courses.course",
+    "pk": 6,
+    "fields": {
+      "title": "Git и GitHub для команды",
+      "description": "Версионный контроль, ветвление, pull requests, code review, CI/CD с GitHub Actions.",
+      "price": "1999.00",
+      "difficulty_level": "beginner",
+      "duration_hours": 25,
+      "popularity": 520,
+      "is_limited": false,
+      "quantity": null,
+      "created_at": "2025-12-06T10:00:00Z",
+      "updated_at": "2025-12-06T10:00:00Z"
+    }
+  },
+  {
+    "model": "courses.course",
+    "pk": 7,
+    "fields": {
+      "title": "Docker и контейнеризация",
+      "description": "Работа с Docker: образы, контейнеры, docker-compose, volumes, networks, оптимизация образов.",
+      "price": "3499.00",
+      "difficulty_level": "intermediate",
+      "duration_hours": 35,
+      "popularity": 310,
+      "is_limited": false,
+      "quantity": null,
+      "created_at": "2025-12-07T10:00:00Z",
+      "updated_at": "2025-12-07T10:00:00Z"
+    }
+  },
+  {
+    "model": "courses.course",
+    "pk": 8,
+    "fields": {
+      "title": "Безопасность веб-приложений",
+      "description": "OWASP Top 10, XSS, CSRF, SQL injection, JWT, безопасное хранение паролей, аудит безопасности.",
+      "price": "5999.00",
+      "difficulty_level": "advanced",
+      "duration_hours": 70,
+      "popularity": 165,
+      "is_limited": true,
+      "quantity": 30,
+      "created_at": "2025-12-08T10:00:00Z",
+      "updated_at": "2025-12-08T10:00:00Z"
+    }
+  },
+  {
+    "model": "courses.course",
+    "pk": 9,
+    "fields": {
+      "title": "Алгоритмы и структуры данных",
+      "description": "Базовые и продвинутые алгоритмы: сортировка, поиск, графы, деревья, динамическое программирование.",
+      "price": "4999.00",
+      "difficulty_level": "intermediate",
+      "duration_hours": 65,
+      "popularity": 245,
+      "is_limited": false,
+      "quantity": null,
+      "created_at": "2025-12-09T10:00:00Z",
+      "updated_at": "2025-12-09T10:00:00Z"
+    }
+  },
+  {
+    "model": "courses.course",
+    "pk": 10,
+    "fields": {
+      "title": "TypeScript для профессионалов",
+      "description": "Типизация в JavaScript: дженерики, типы утилиты, декораторы, интеграция с React и Node.js.",
+      "price": "3799.00",
+      "difficulty_level": "advanced",
+      "duration_hours": 45,
+      "popularity": 185,
+      "is_limited": true,
+      "quantity": 75,
+      "created_at": "2025-12-10T10:00:00Z",
+      "updated_at": "2025-12-10T10:00:00Z"
+    }
+  }
+]
