@@ -19,3 +19,8 @@ export interface AuthResponse {
         email: string
     }
 }
+
+export interface RefreshResponse {
+    access: string
+    refresh: string
+}

@@ -2,18 +2,18 @@ import { Link } from 'react-router-dom'
 import { getProfileQuery } from '../hooks/getProfileQuery'
 
 export const UserProfile = () => {
-    const { data, isLoading, error } = getProfileQuery()
+    const respose = getProfileQuery()
 
-    if (isLoading) return <div>Loading...</div>
-    if (error) return <div>Error: {error.message}</div>
+    // if (isLoading) return <div>Loading...</div>
+    // if (error) return <div>Error: {error.message}</div>
     return (
         <>
-            <h1>{data.username}</h1>
-            <p>{data.email}</p>
-            <p>{data.sex}</p>
-            <p>{data.age}</p>
-            <p>{data.description}</p>
-            <image>{data.photo}</image>
+            <h1>{respose.data?.data.username}</h1>
+            <p>{respose.data?.data.email}</p>
+            <p>{respose.data?.data.sex}</p>
+            <p>{respose.data?.data.age}</p>
+            <p>{respose.data?.data.description}</p>
+            <image>{respose.data?.data.photo}</image>
             <br />
             <Link to="/user/settings">
                 <button

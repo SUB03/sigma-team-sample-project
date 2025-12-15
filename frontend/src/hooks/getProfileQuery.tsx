@@ -1,31 +1,23 @@
 import { useQuery } from '@tanstack/react-query'
-import { useCookies } from 'react-cookie'
-import { base_url } from '../constants/api'
+import { $api } from '../api'
+
+interface UserProfile {
+    id: number
+    username: string
+    email: string
+    photo: string
+    description: string
+    sex: string
+    age: number
+}
 
 export const getProfileQuery = () => {
-    const [cookies] = useCookies(['access_token'])
     return useQuery({
         queryKey: ['profileData'],
         queryFn: async () => {
-            if (!cookies.access_token) {
-                throw new Error('No access token found')
-            }
-            const response = await fetch(`${base_url}/user/profile/`, {
-                method: 'GET',
-                headers: {
-                    Authorization: `Bearer ${cookies.access_token}`,
-                    'Content-Type': 'application/json',
-                },
-            })
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`)
-            }
-
-            return await response.json()
+            return $api.get<UserProfile>('/user/profile/')
         },
-        enabled: !!cookies.access_token,
-        retry: 1, // количество повторных попыток при ошибке
+        retry: 1,
         staleTime: 5 * 60 * 1000, // данные считаются свежими 5 минут
     })
 }

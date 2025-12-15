@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import type { AuthResponse, UserSignInData } from '../types/auth'
+import type { UserSignInData } from '../types/auth'
 import { useSignInMutation } from '../mutations/authMutations'
-import { useAuthTokens } from '../hooks/saveAuthTokens'
+import { useAuthTokens } from '../hooks/useAuthTokens'
 
 export const SignIn = () => {
     const [formData, setFormData] = useState<UserSignInData>({
@@ -25,9 +25,9 @@ export const SignIn = () => {
         e.preventDefault() // Prevent page refresh
 
         try {
-            const response: AuthResponse =
-                await authorizationMutation.mutateAsync(formData)
-            saveAuthTokens(response)
+            const response = await authorizationMutation.mutateAsync(formData)
+            console.log(response)
+            saveAuthTokens(response.data.access, response.data.refresh)
         } catch (error) {
             console.error('Registration failed:', error)
         }

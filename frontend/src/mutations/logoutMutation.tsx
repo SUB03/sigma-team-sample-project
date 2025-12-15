@@ -16,12 +16,10 @@ export const useLogout = () => {
             })
 
             if (!response.ok) {
-                console.log('hmmm....')
-                console.log(response)
                 throw new Error('logout failed')
             }
 
-            return await response.json()
+            return response.status
         },
         onSuccess: (data) => {
             console.log('logout successful:', data)

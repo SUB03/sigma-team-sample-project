@@ -2,6 +2,7 @@ import { z } from 'zod'
 
 import { getProfileQuery } from '../hooks/getProfileQuery'
 import { useProfileChangeMutation } from '../mutations/useProfileChangeMutation'
+import { useQueryClient } from '@tanstack/react-query'
 
 const userSchema = z.object({
     username: z.string().optional(),
@@ -17,13 +18,14 @@ const userSchema = z.object({
 })
 
 export function UserSettings() {
-    const { data, isLoading, error } = getProfileQuery()
+    const response = getProfileQuery()
     const profileChangeMutation = useProfileChangeMutation()
+    const queryClient = useQueryClient()
 
-    if (isLoading) return <div>Loading...</div>
-    if (error) return <div>Error: {error.message}</div>
+    // if (isLoading) return <div>Loading...</div>
+    // if (error) return <div>Error: {error.message}</div>
 
-    function FormAction(form_data: FormData) {
+    async function FormAction(form_data: FormData) {
         const formValues = userSchema.safeParse(Object.fromEntries(form_data))
 
         if (formValues.success) {
@@ -36,7 +38,15 @@ export function UserSettings() {
                 )
             )
 
-            profileChangeMutation.mutateAsync(filteredData)
+            try {
+                await profileChangeMutation.mutateAsync(filteredData)
+
+                await queryClient.invalidateQueries({
+                    queryKey: ['profileData'],
+                })
+            } catch (err) {
+                console.log(err)
+            }
         } else {
             console.log(formValues.error)
         }
@@ -58,7 +68,7 @@ export function UserSettings() {
                         type="text"
                         id="username"
                         name="username"
-                        defaultValue={data.username}
+                        defaultValue={response.data?.data.username}
                     />
                 </>
                 <br />
@@ -68,7 +78,7 @@ export function UserSettings() {
                         type="email"
                         id="email"
                         name="email"
-                        defaultValue={data.email}
+                        defaultValue={response.data?.data.email}
                     />
                 </>
                 <br />
@@ -83,7 +93,7 @@ export function UserSettings() {
                         type="number"
                         id="age"
                         name="age"
-                        defaultValue={data.age || ''}
+                        defaultValue={response.data?.data.age || ''}
                     />
                 </>
                 <br />
@@ -93,7 +103,7 @@ export function UserSettings() {
                         type="text"
                         id="sex"
                         name="sex"
-                        defaultValue={data.sex || ''}
+                        defaultValue={response.data?.data.sex || ''}
                     />
                 </>
                 <br />
@@ -102,7 +112,7 @@ export function UserSettings() {
                     <textarea
                         id="description"
                         name="description"
-                        defaultValue={data.description || ''}
+                        defaultValue={response.data?.data.description || ''}
                     />
                 </>
                 <br />
@@ -112,14 +122,14 @@ export function UserSettings() {
                         type="text"
                         id="photo"
                         name="photo"
-                        defaultValue={data.photo || ''}
+                        defaultValue={response.data?.data.photo || ''}
                     />
                 </>
                 <br />
-                {data.photo && (
+                {response.data?.data.photo && (
                     <>
                         <img
-                            src={data.photo}
+                            src={response.data?.data.photo}
                             alt="Profile"
                             style={{ maxWidth: '100px', maxHeight: '100px' }}
                         />

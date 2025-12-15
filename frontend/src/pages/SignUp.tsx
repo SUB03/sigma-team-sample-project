@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import type { UserSignUpData, AuthResponse } from '../types/auth'
+import type { UserSignUpData } from '../types/auth'
 import { useSignUpMutation } from '../mutations/authMutations'
-import { useAuthTokens } from '../hooks/saveAuthTokens'
+import { useAuthTokens } from '../hooks/useAuthTokens'
 
 export function SignUp() {
     const { saveAuthTokens } = useAuthTokens()
@@ -26,11 +26,8 @@ export function SignUp() {
         e.preventDefault() // Prevent page refresh
 
         try {
-            const response: AuthResponse = await registerMutation.mutateAsync(
-                formData
-            )
-
-            saveAuthTokens(response)
+            const response = await registerMutation.mutateAsync(formData)
+            saveAuthTokens(response.data.access, response.data.refresh)
         } catch (error) {
             console.error('Registration failed:', error)
         }

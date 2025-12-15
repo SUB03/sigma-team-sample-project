@@ -1,51 +1,50 @@
 import { useMutation } from '@tanstack/react-query'
-import type { UserSignUpData, UserSignInData } from '../types/auth'
-import { base_url } from '../constants/api'
+import type {
+    UserSignUpData,
+    UserSignInData,
+    AuthResponse,
+} from '../types/auth'
+import { $api } from '../api'
+import type { AxiosError, AxiosResponse } from 'axios'
 
 export const useSignUpMutation = () => {
-    return useMutation({
-        mutationFn: async (userData: UserSignUpData) => {
-            const response = await fetch(`${base_url}/user/register/`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(userData),
-            })
-
-            if (!response.ok) {
-                throw new Error('Registration failed')
-            }
-
-            return await response.json()
-        },
-        onSuccess: (data) => {
-            console.log('Registration successful:', data)
-            // Handle successful registration (redirect, show message, etc.)
-        },
-        onError: (error: Error) => {
-            console.error('Registration error:', error)
-            // Handle error (show error message, etc.)
-        },
-    })
+    return useMutation<AxiosResponse<AuthResponse>, AxiosError, UserSignUpData>(
+        {
+            mutationFn: async (userData: UserSignUpData) => {
+                return $api.post<AuthResponse>('/user/register/', userData)
+            },
+            onSuccess: (data) => {
+                console.log('Registration successful:', data)
+                // Handle successful registration (redirect, show message, etc.)
+            },
+            onError: (error: Error) => {
+                console.error('Registration error:', error)
+                // Handle error (show error message, etc.)
+            },
+        }
+    )
 }
 
 export const useSignInMutation = () => {
     return useMutation({
         mutationFn: async (userData: UserSignInData) => {
-            const response = await fetch(`${base_url}/user/login/`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(userData),
-            })
+            return $api.post('/user/login/', userData)
+        },
+        onSuccess: (data) => {
+            console.log('authorization successful:', data)
+            // Handle successful registration (redirect, show message, etc.)
+        },
+        onError: (error: Error) => {
+            console.error('authorization error:', error)
+            // Handle error (show error message, etc.)
+        },
+    })
+}
 
-            if (!response.ok) {
-                throw new Error('authorization failed')
-            }
-
-            return await response.json()
+export const getTokensMutation = () => {
+    return useMutation({
+        mutationFn: async (refresh: string) => {
+            return $api.post('/user/token/refresh/', { refresh: refresh })
         },
         onSuccess: (data) => {
             console.log('authorization successful:', data)

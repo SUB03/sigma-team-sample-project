@@ -5,6 +5,7 @@ import { useCookies } from 'react-cookie'
 
 export const useProfileChangeMutation = () => {
     const [cookie] = useCookies(['access_token'])
+
     return useMutation({
         mutationFn: async (userData: UserProfileData) => {
             const response = await fetch(`${base_url}/user/profile/`, {
@@ -28,7 +29,6 @@ export const useProfileChangeMutation = () => {
         },
         onError: (error: Error) => {
             console.error('profile update error:', error)
-            // Handle error (show error message, etc.)
         },
     })
 }

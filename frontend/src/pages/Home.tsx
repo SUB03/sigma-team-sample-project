@@ -4,23 +4,27 @@ import { useCookies } from 'react-cookie'
 import { useLogout } from '../mutations/logoutMutation'
 
 export function Home() {
-    const [cookies, , removeCookie] = useCookies([
+    const [cookie, , removeCookie] = useCookies([
         'access_token',
         'refresh_token',
     ])
 
-    const logged_in = cookies.access_token
+    const logged_in = cookie.access_token
     const destination = logged_in ? '/user' : '/sign_in'
     const user_button = logged_in ? 'Go to Profile' : 'Authorization'
-    const registerMutation = useLogout()
+    const logoutMutation = useLogout()
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        registerMutation.mutateAsync()
-        console.log('removed')
-
-        removeCookie('access_token', { path: '/' })
-        removeCookie('refresh_token', { path: '/' })
+        try {
+            const status = await logoutMutation.mutateAsync()
+            if (status === 205) {
+                removeCookie('access_token', { path: '/' })
+                removeCookie('refresh_token', { path: '/' })
+            }
+        } catch (err) {
+            console.error('Logout failed:', err)
+        }
     }
 
     return (
@@ -34,10 +38,8 @@ export function Home() {
             </Link>
             <form onSubmit={handleSubmit}>
                 {logged_in && (
-                    <button type="submit" disabled={registerMutation.isPending}>
-                        {registerMutation.isPending
-                            ? 'logging out...'
-                            : 'logout'}
+                    <button type="submit" disabled={logoutMutation.isPending}>
+                        {logoutMutation.isPending ? 'logging out...' : 'logout'}
                     </button>
                 )}
             </form>
