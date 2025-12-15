@@ -18,8 +18,9 @@ COPY . .
 # Создание директории для static файлов
 RUN mkdir -p /app/staticfiles
 
-# Запуск сервера
-CMD python manage.py makemigrations && \
-    python manage.py migrate && \
-    python manage.py collectstatic --noinput && \
-    python manage.py runserver 0.0.0.0:8000
+# Копирование и настройка entrypoint скрипта
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
+# Запуск через entrypoint
+CMD ["/app/entrypoint.sh"] 
