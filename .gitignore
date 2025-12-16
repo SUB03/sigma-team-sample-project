@@ -60,7 +60,6 @@ Thumbs.db
 ehthumbs.db
 
 # Environment
-.env
 .env.local
 .env.*.local
 *.local

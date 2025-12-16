@@ -7,9 +7,6 @@ from .views import (
     CourseDeleteAPIView,
     CoursesCategoriesAPIView,
     PopularCoursesAPIView,
-    CourseReviewsAPIView,
-    CourseAddReviewAPIView,
-    GetCourseAverageRatingAPIView,
 )
 
 urlpatterns = [
@@ -20,7 +17,4 @@ urlpatterns = [
     path('<int:course_id>/update/', CourseUpdateAPIView.as_view(), name='course_update'),
     path('<int:course_id>/delete/', CourseDeleteAPIView.as_view(), name='course_delete'),
     path('categories/', CoursesCategoriesAPIView.as_view(), name='course_categories'),
-    path('<int:course_id>/reviews/', CourseReviewsAPIView.as_view(), name='course_reviews'),
-    path('<int:course_id>/reviews/add/', CourseAddReviewAPIView.as_view(), name='course_add_review'),
-    path('<int:course_id>/average_rating/', GetCourseAverageRatingAPIView.as_view(), name='course_average_rating'),
 ]

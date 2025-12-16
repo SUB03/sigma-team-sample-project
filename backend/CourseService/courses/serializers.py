@@ -1,17 +1,6 @@
 from rest_framework import serializers
-from .models import Course, Review
+from .models import Course
 
-class ReviewSerializer(serializers.Serializer):
-    class Meta:
-        model = Review
-        fields = ['id', 'course', 'user_id', 'comment', 'rating', 'created_at']
-        read_only_fields = ['id', 'created_at']
-
-    def validate_rating(self, value):
-        """Валидация рейтинга"""
-        if not (1 <= value <= 5):
-            raise serializers.ValidationError('Рейтинг должен быть от 1 до 5')
-        return value
 
 class CourseSerializer(serializers.ModelSerializer):
     """Сериализатор для модели Course"""

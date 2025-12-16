@@ -2,7 +2,7 @@
 
 ## Архитектура микросервисов
 
-Платформа состоит из 3 независимых микросервисов с общей JWT аутентификацией:
+Платформа состоит из 4 независимых микросервисов с общей JWT аутентификацией:
 
 ```
 ┌─────────────────┐
@@ -11,22 +11,22 @@
 │   localhost:80  │
 └────────┬────────┘
          │
-    ┌────┴─────────────────┐
-    │                      │
-┌───▼───────┐ ┌──▼─────────┐ ┌──────────────┐
-│   User    │ │   Course   │ │   Purchase   │
-│  Service  │ │  Service   │ │   Service    │
-│  :8001    │ │   :8003    │ │    :8002     │
-│           │ │            │ │              │
-│ user_db   │ │ course_db  │ │ purchase_db  │
-└───┬───────┘ └────┬───────┘ └──────┬───────┘
-    │              │                │
-    └──────────────┴────────────────┘
+    ┌────┴──────────────────────┐
+    │                           │
+┌───▼───────┐ ┌──▼─────────┐ ┌──▼────────┐ ┌──▼────────┐
+│   User    │ │   Course   │ │  Purchase │ │  Review   │
+│  Service  │ │  Service   │ │  Service  │ │  Service  │
+│  :8001    │ │   :8003    │ │   :8002   │ │  :8004    │
+│           │ │            │ │           │ │           │
+│ user_db   │ │ course_db  │ │purchase_db│ │ review_db │
+└───┬───────┘ └────┬───────┘ └─────┬─────┘ └─────┬─────┘
+    │              │               │             │
+    └──────────────┴───────────────┴─────────────┘
                    │
          ┌─────────▼──────────┐
          │   PostgreSQL       │
          │   localhost:5433   │
-         │  (3 databases)     │
+         │  (4 databases)     │
          └────────────────────┘
 ```
 
@@ -45,9 +45,15 @@
    - CRUD операции с курсами
 
 3. **Purchase Service** (http://localhost:8002) - обработка покупок
+
    - База данных: `purchase_db`
    - Валидирует JWT токены от User Service
    - Связывается с Course Service для проверки курсов
+
+4. **Review Service** (http://localhost:8004) - управление отзывами на курсы
+   - База данных: `review_db`
+   - Валидирует JWT токены от User Service
+   - CRUD операции с отзывами
 
 ---
 
@@ -427,12 +433,18 @@ const data = await response.json();
 
 **Примечание:** Возвращает только те категории, которые используются в существующих курсах.
 
-### 2.8. Получить отзывы курса
+---
 
-**GET** `/courses/<course_id>/reviews/`
+## 3. Review Service API
+
+**Base URL:** `http://localhost:8004/reviews/`
+
+### 3.1. Получить отзывы курса
+
+**GET** `/reviews/course/<course_id>/`
 
 ```javascript
-const response = await fetch("http://localhost:8003/courses/1/reviews/");
+const response = await fetch("http://localhost:8004/reviews/course/1/");
 const data = await response.json();
 // Response:
 // {
@@ -459,12 +471,12 @@ const data = await response.json();
 // }
 ```
 
-### 2.9. Добавить отзыв к курсу (Требуется аутентификация)
+### 3.2. Добавить отзыв к курсу (Требуется аутентификация)
 
-**POST** `/courses/<course_id>/reviews/add/`
+**POST** `/reviews/course/<course_id>/add/`
 
 ```javascript
-const response = await fetch("http://localhost:8003/courses/1/reviews/add/", {
+const response = await fetch("http://localhost:8004/reviews/course/1/add/", {
   method: "POST",
   headers: {
     Authorization: `Bearer ${localStorage.getItem("access_token")}`,
@@ -495,29 +507,119 @@ const data = await response.json();
 - `rating` - обязательное поле, целое число от 1 до 5
 - `comment` - опциональное текстовое поле
 
-### 2.10. Получить средний рейтинг курса
+**Ограничения:**
+- Один пользователь может оставить только один отзыв на курс
 
-**GET** `/courses/<course_id>/average_rating/`
+### 3.3. Обновить отзыв (Требуется аутентификация)
+
+**PUT** `/reviews/<review_id>/update/`
 
 ```javascript
-const response = await fetch("http://localhost:8003/courses/1/average_rating/");
+const response = await fetch("http://localhost:8004/reviews/10/update/", {
+  method: "PUT",
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    rating: 4,
+    comment: "Обновил отзыв. Курс хороший, но есть моменты для улучшения.",
+  }),
+});
+
+const data = await response.json();
+// Response:
+// {
+//     "message": "Отзыв успешно обновлен",
+//     "review": {
+//         "id": 10,
+//         "course_id": 1,
+//         "user_id": 3,
+//         "rating": 4,
+//         "comment": "Обновил отзыв. Курс хороший, но есть моменты для улучшения.",
+//         "created_at": "2025-12-16T12:00:00Z",
+//         "updated_at": "2025-12-16T14:30:00Z"
+//     }
+// }
+```
+
+**Примечание:** Можно обновлять только свои отзывы.
+
+### 3.4. Удалить отзыв (Требуется аутентификация)
+
+**DELETE** `/reviews/<review_id>/delete/`
+
+```javascript
+const response = await fetch("http://localhost:8004/reviews/10/delete/", {
+  method: "DELETE",
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+  },
+});
+
+const data = await response.json();
+// Response:
+// {
+//     "message": "Отзыв успешно удален"
+// }
+```
+
+**Примечание:** Можно удалять только свои отзывы.
+
+### 3.5. Получить средний рейтинг курса
+
+**GET** `/reviews/course/<course_id>/average/`
+
+```javascript
+const response = await fetch("http://localhost:8004/reviews/course/1/average/");
 const data = await response.json();
 // Response:
 // {
 //     "course_id": 1,
-//     "average_rating": 4.5
+//     "average_rating": 4.5,
+//     "reviews_count": 15
 // }
 ```
 
 **Примечание:** Если отзывов нет, `average_rating` будет 0.0
 
+### 3.6. Мои отзывы (Требуется аутентификация)
+
+**GET** `/reviews/my-reviews/`
+
+```javascript
+const response = await fetch("http://localhost:8004/reviews/my-reviews/", {
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+  },
+});
+
+const data = await response.json();
+// Response:
+// {
+//     "count": 5,
+//     "reviews": [
+//         {
+//             "id": 10,
+//             "course_id": 1,
+//             "user_id": 3,
+//             "rating": 5,
+//             "comment": "Отличный курс!",
+//             "created_at": "2025-12-16T12:00:00Z",
+//             "updated_at": "2025-12-16T12:00:00Z"
+//         },
+//         ...
+//     ]
+// }
+```
+
 ---
 
-## 3. Purchase Service API
+## 4. Purchase Service API
 
 **Base URL:** `http://localhost:8002/purchase/`
 
-### 3.1. Купить курс
+### 4.1. Купить курс
 
 **POST** `/purchase/create/`
 
@@ -556,7 +658,7 @@ const data = await response.json();
 - `404` - Курс не найден
 - `503` - Course Service недоступен
 
-### 3.2. Мои покупки
+### 4.2. Мои покупки
 
 **GET** `/purchase/my-purchases/`
 
@@ -586,7 +688,7 @@ const data = await response.json();
 // }
 ```
 
-### 3.3. ID купленных курсов
+### 4.3. ID купленных курсов
 
 **GET** `/purchase/my-courses/`
 
@@ -604,7 +706,7 @@ const data = await response.json();
 // }
 ```
 
-### 3.4. Проверить покупку
+### 4.4. Проверить покупку
 
 **GET** `/purchase/check/<course_id>/`
 
@@ -623,7 +725,7 @@ const data = await response.json();
 // }
 ```
 
-### 3.5. Все покупки (Требуется аутентификация)
+### 4.5. Все покупки (Требуется аутентификация)
 
 **GET** `/purchase/all/`
 
@@ -701,13 +803,13 @@ const course = await courseResponse.json();
 
 // 6. Получить отзывы курса
 const reviewsResponse = await fetch(
-  `http://localhost:8003/courses/${courses[0].id}/reviews/`
+  `http://localhost:8004/reviews/course/${courses[0].id}/`
 );
 const { reviews } = await reviewsResponse.json();
 
 // 7. Получить средний рейтинг курса
 const ratingResponse = await fetch(
-  `http://localhost:8003/courses/${courses[0].id}/average_rating/`
+  `http://localhost:8004/reviews/course/${courses[0].id}/average/`
 );
 const { average_rating } = await ratingResponse.json();
 ```
@@ -1057,7 +1159,7 @@ export function useReviews(courseId) {
   const fetchReviews = async () => {
     try {
       const response = await fetch(
-        `http://localhost:8003/courses/${courseId}/reviews/`
+        `http://localhost:8004/reviews/course/${courseId}/`
       );
       const data = await response.json();
       setReviews(data.reviews);
@@ -1071,7 +1173,7 @@ export function useReviews(courseId) {
   const fetchAverageRating = async () => {
     try {
       const response = await fetch(
-        `http://localhost:8003/courses/${courseId}/average_rating/`
+        `http://localhost:8004/reviews/course/${courseId}/average/`
       );
       const data = await response.json();
       setAverageRating(data.average_rating);
@@ -1083,7 +1185,7 @@ export function useReviews(courseId) {
   const addReview = async (rating, comment) => {
     try {
       const response = await fetch(
-        `http://localhost:8003/courses/${courseId}/reviews/add/`,
+        `http://localhost:8004/reviews/course/${courseId}/add/`,
         {
           method: "POST",
           headers: {
@@ -1188,6 +1290,7 @@ docker-compose ps
 docker-compose logs user-service
 docker-compose logs course-service
 docker-compose logs purchase-service
+docker-compose logs review-service
 ```
 
 **Адреса:**
@@ -1196,6 +1299,7 @@ docker-compose logs purchase-service
 - User Service: http://localhost:8001
 - Purchase Service: http://localhost:8002
 - Course Service: http://localhost:8003
+- Review Service: http://localhost:8004
 - PostgreSQL: localhost:5433 (external), 5432 (internal)
 
 **Базы данных:**
@@ -1203,6 +1307,7 @@ docker-compose logs purchase-service
 - `user_db` - пользователи, JWT токены
 - `course_db` - курсы
 - `purchase_db` - покупки
+- `review_db` - отзывы
 
 ---
 

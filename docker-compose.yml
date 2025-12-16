@@ -16,7 +16,7 @@ services:
     ports:
       - "5433:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U sigma_user -d user_db && pg_isready -U sigma_user -d purchase_db && pg_isready -U sigma_user -d course_db"]
+      test: ["CMD-SHELL", "pg_isready -U sigma_user -d user_db && pg_isready -U sigma_user -d purchase_db && pg_isready -U sigma_user -d course_db && pg_isready -U sigma_user -d review_db"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -95,6 +95,7 @@ services:
       ALLOWED_HOSTS: "localhost,127.0.0.1,course-service"
       USER_SERVICE_URL: "http://user-service:8000"
       PURCHASE_SERVICE_URL: "http://purchase-service:8000"
+      REVIEW_SERVICE_URL: "http://review-service:8004"
     depends_on:
       db:
         condition: service_healthy
@@ -104,6 +105,35 @@ services:
       - "8003:8000"
     volumes:
       - ./backend/CourseService:/app
+    restart: unless-stopped
+
+  # Review Service (Сервис отзывов)
+  review-service:
+    build:
+      context: ./backend/ReviewService
+      dockerfile: Dockerfile
+    container_name: sigma_review_service
+    environment:
+      DEBUG: "True"
+      SECRET_KEY: "your-review-secret-key-change-in-production"
+      JWT_SECRET_KEY: "shared-jwt-secret-key-for-all-services-change-in-production"
+      DB_NAME: "review_db"
+      DB_USER: "sigma_user"
+      DB_PASSWORD: "sigma_password"
+      DB_HOST: "db"
+      DB_PORT: "5432"
+      ALLOWED_HOSTS: "localhost,127.0.0.1,review-service"
+      COURSE_SERVICE_URL: "http://course-service:8000"
+      USER_SERVICE_URL: "http://user-service:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - sigma_network
+    ports:
+      - "8004:8004"
+    volumes:
+      - ./backend/ReviewService:/app
     restart: unless-stopped
 
   # Frontend (React + Vite)

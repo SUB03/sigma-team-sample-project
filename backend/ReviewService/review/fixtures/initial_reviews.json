@@ -1,0 +1,302 @@
+[
+  {
+    "model": "review.review",
+    "pk": 1,
+    "fields": {
+      "course_id": 1,
+      "user_id": 2,
+      "rating": 5,
+      "comment": "Отличный курс для начинающих! Все понятно и доступно объяснено. Преподаватель отлично подает материал.",
+      "created_at": "2025-12-01T10:30:00Z",
+      "updated_at": "2025-12-01T10:30:00Z"
+    }
+  },
+  {
+    "model": "review.review",
+    "pk": 2,
+    "fields": {
+      "course_id": 1,
+      "user_id": 3,
+      "rating": 4,
+      "comment": "Хороший базовый курс, но хотелось бы больше практических заданий.",
+      "created_at": "2025-12-02T14:20:00Z",
+      "updated_at": "2025-12-02T14:20:00Z"
+    }
+  },
+  {
+    "model": "review.review",
+    "pk": 3,
+    "fields": {
+      "course_id": 1,
+      "user_id": 4,
+      "rating": 5,
+      "comment": "Прошел курс за 2 недели, уже пишу свои первые программы. Спасибо!",
+      "created_at": "2025-12-03T09:15:00Z",
+      "updated_at": "2025-12-03T09:15:00Z"
+    }
+  },
+  {
+    "model": "review.review",
+    "pk": 4,
+    "fields": {
+      "course_id": 2,
+      "user_id": 2,
+      "rating": 5,
+      "comment": "Лучший курс по Django REST Framework! Очень глубокое погружение в тему.",
+      "created_at": "2025-12-04T16:45:00Z",
+      "updated_at": "2025-12-04T16:45:00Z"
+    }
+  },
+  {
+    "model": "review.review",
+    "pk": 5,
+    "fields": {
+      "course_id": 2,
+      "user_id": 5,
+      "rating": 4,
+      "comment": "Отличный материал, но требует базовых знаний Django. Рекомендую сначала изучить Django основы.",
+      "created_at": "2025-12-05T11:30:00Z",
+      "updated_at": "2025-12-05T11:30:00Z"
+    }
+  },
+  {
+    "model": "review.review",
+    "pk": 6,
+    "fields": {
+      "course_id": 3,
+      "user_id": 3,
+      "rating": 5,
+      "comment": "Курс по микросервисам просто бомба! Все практично и применимо в реальных проектах.",
+      "created_at": "2025-12-06T13:00:00Z",
+      "updated_at": "2025-12-06T13:00:00Z"
+    }
+  },
+  {
+    "model": "review.review",
+    "pk": 7,
+    "fields": {
+      "course_id": 3,
+      "user_id": 6,
+      "rating": 4,
+      "comment": "Сложный курс, но стоит того. Много нового узнал о Docker и Kubernetes.",
+      "created_at": "2025-12-07T15:20:00Z",
+      "updated_at": "2025-12-07T15:20:00Z"
+    }
+  },
+  {
+    "model": "review.review",
+    "pk": 8,
+    "fields": {
+      "course_id": 4,
+      "user_id": 4,
+      "rating": 5,
+      "comment": "React hooks объяснены идеально! Теперь понимаю как правильно использовать useState и useEffect.",
+      "created_at": "2025-12-08T10:00:00Z",
+      "updated_at": "2025-12-08T10:00:00Z"
+    }
+  },
+  {
+    "model": "review.review",
+    "pk": 9,
+    "fields": {
+      "course_id": 4,
+      "user_id": 7,
+      "rating": 5,
+      "comment": "Отличный курс для frontend разработчиков. Много практики и реальных примеров.",
+      "created_at": "2025-12-09T12:30:00Z",
+      "updated_at": "2025-12-09T12:30:00Z"
+    }
+  },
+  {
+    "model": "review.review",
+    "pk": 10,
+    "fields": {
+      "course_id": 4,
+      "user_id": 8,
+      "rating": 4,
+      "comment": "Хороший курс, но местами быстрый темп. Пришлось возвращаться к некоторым лекциям.",
+      "created_at": "2025-12-10T14:45:00Z",
+      "updated_at": "2025-12-10T14:45:00Z"
+    }
+  },
+  {
+    "model": "review.review",
+    "pk": 11,
+    "fields": {
+      "course_id": 5,
+      "user_id": 2,
+      "rating": 5,
+      "comment": "PostgreSQL от А до Я! Научился оптимизировать запросы и работать с индексами.",
+      "created_at": "2025-12-11T09:00:00Z",
+      "updated_at": "2025-12-11T09:00:00Z"
+    }
+  },
+  {
+    "model": "review.review",
+    "pk": 12,
+    "fields": {
+      "course_id": 5,
+      "user_id": 9,
+      "rating": 4,
+      "comment": "Очень полезный курс для backend разработчиков. Рекомендую!",
+      "created_at": "2025-12-12T11:15:00Z",
+      "updated_at": "2025-12-12T11:15:00Z"
+    }
+  },
+  {
+    "model": "review.review",
+    "pk": 13,
+    "fields": {
+      "course_id": 6,
+      "user_id": 3,
+      "rating": 5,
+      "comment": "Git и GitHub теперь не кажутся сложными! Все команды разобраны подробно.",
+      "created_at": "2025-12-13T08:30:00Z",
+      "updated_at": "2025-12-13T08:30:00Z"
+    }
+  },
+  {
+    "model": "review.review",
+    "pk": 14,
+    "fields": {
+      "course_id": 6,
+      "user_id": 10,
+      "rating": 5,
+      "comment": "Обязательный курс для любого разработчика. Научился работать с ветками и делать code review.",
+      "created_at": "2025-12-14T10:00:00Z",
+      "updated_at": "2025-12-14T10:00:00Z"
+    }
+  },
+  {
+    "model": "review.review",
+    "pk": 15,
+    "fields": {
+      "course_id": 6,
+      "user_id": 11,
+      "rating": 4,
+      "comment": "Хороший базовый курс, но хотелось бы больше про GitHub Actions.",
+      "created_at": "2025-12-15T13:20:00Z",
+      "updated_at": "2025-12-15T13:20:00Z"
+    }
+  },
+  {
+    "model": "review.review",
+    "pk": 16,
+    "fields": {
+      "course_id": 7,
+      "user_id": 5,
+      "rating": 5,
+      "comment": "Docker стал понятен! Теперь контейнеризую все свои проекты.",
+      "created_at": "2025-12-16T09:45:00Z",
+      "updated_at": "2025-12-16T09:45:00Z"
+    }
+  },
+  {
+    "model": "review.review",
+    "pk": 17,
+    "fields": {
+      "course_id": 7,
+      "user_id": 12,
+      "rating": 4,
+      "comment": "Отличный практический курс. Научился создавать и оптимизировать Docker образы.",
+      "created_at": "2025-12-16T11:00:00Z",
+      "updated_at": "2025-12-16T11:00:00Z"
+    }
+  },
+  {
+    "model": "review.review",
+    "pk": 18,
+    "fields": {
+      "course_id": 8,
+      "user_id": 6,
+      "rating": 5,
+      "comment": "Безопасность - это важно! Курс научил меня защищать свои приложения от уязвимостей.",
+      "created_at": "2025-12-16T12:30:00Z",
+      "updated_at": "2025-12-16T12:30:00Z"
+    }
+  },
+  {
+    "model": "review.review",
+    "pk": 19,
+    "fields": {
+      "course_id": 8,
+      "user_id": 13,
+      "rating": 5,
+      "comment": "OWASP Top 10 разобран детально. Теперь знаю как защититься от XSS и SQL injection.",
+      "created_at": "2025-12-16T14:00:00Z",
+      "updated_at": "2025-12-16T14:00:00Z"
+    }
+  },
+  {
+    "model": "review.review",
+    "pk": 20,
+    "fields": {
+      "course_id": 9,
+      "user_id": 7,
+      "rating": 4,
+      "comment": "Сложный но полезный курс по алгоритмам. Помог подготовиться к собеседованиям.",
+      "created_at": "2025-12-16T15:30:00Z",
+      "updated_at": "2025-12-16T15:30:00Z"
+    }
+  },
+  {
+    "model": "review.review",
+    "pk": 21,
+    "fields": {
+      "course_id": 9,
+      "user_id": 14,
+      "rating": 5,
+      "comment": "Динамическое программирование наконец-то стало понятным! Отличные примеры и объяснения.",
+      "created_at": "2025-12-16T16:45:00Z",
+      "updated_at": "2025-12-16T16:45:00Z"
+    }
+  },
+  {
+    "model": "review.review",
+    "pk": 22,
+    "fields": {
+      "course_id": 10,
+      "user_id": 8,
+      "rating": 5,
+      "comment": "TypeScript - must have для серьезных проектов. Курс научил правильно типизировать код.",
+      "created_at": "2025-12-16T17:00:00Z",
+      "updated_at": "2025-12-16T17:00:00Z"
+    }
+  },
+  {
+    "model": "review.review",
+    "pk": 23,
+    "fields": {
+      "course_id": 10,
+      "user_id": 15,
+      "rating": 4,
+      "comment": "Отличный курс для тех, кто уже знает JavaScript. Дженерики и utility types объяснены хорошо.",
+      "created_at": "2025-12-16T18:15:00Z",
+      "updated_at": "2025-12-16T18:15:00Z"
+    }
+  },
+  {
+    "model": "review.review",
+    "pk": 24,
+    "fields": {
+      "course_id": 1,
+      "user_id": 16,
+      "rating": 3,
+      "comment": "Неплохой курс, но некоторые темы раскрыты поверхностно. Ожидал большего.",
+      "created_at": "2025-12-16T19:00:00Z",
+      "updated_at": "2025-12-16T19:00:00Z"
+    }
+  },
+  {
+    "model": "review.review",
+    "pk": 25,
+    "fields": {
+      "course_id": 2,
+      "user_id": 17,
+      "rating": 5,
+      "comment": "Прошел курс и сразу смог применить знания на работе. Теперь создаю REST API быстро и качественно.",
+      "created_at": "2025-12-16T20:00:00Z",
+      "updated_at": "2025-12-16T20:00:00Z"
+    }
+  }
+]
