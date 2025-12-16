@@ -1,7 +1,7 @@
 import './App.css'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { CookiesProvider } from 'react-cookie'
-import { HashRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 import ProtectedRoute from './routeComponents/ProtectedRoute'
 import PublicRoute from './routeComponents/PublicRoute'
@@ -12,6 +12,7 @@ import { SignUp } from './pages/SignUp'
 import { UserSettings } from './pages/UserSettings'
 import { UserProfile } from './pages/UserProfile'
 import { AuthProvider } from './components/AuthProvider'
+import { Search } from './pages/Search'
 
 const queryClient = new QueryClient()
 
@@ -20,10 +21,11 @@ function App() {
         <CookiesProvider>
             <QueryClientProvider client={queryClient}>
                 <AuthProvider>
-                    <HashRouter>
+                    <BrowserRouter>
                         <Routes>
                             {/* public routes */}
                             <Route path="/" element={<Home />} />
+                            <Route path="/results" element={<Search />} />
 
                             {/* if user is unauthentificated they cannot access these */}
                             <Route element={<ProtectedRoute />}>
@@ -40,7 +42,7 @@ function App() {
                                 <Route path="/sign_up" element={<SignUp />} />
                             </Route>
                         </Routes>
-                    </HashRouter>
+                    </BrowserRouter>
                 </AuthProvider>
             </QueryClientProvider>
         </CookiesProvider>

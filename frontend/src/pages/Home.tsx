@@ -19,6 +19,8 @@ export function Home() {
         'access_token',
         'refresh_token',
     ])
+    const [searchQuery, setSearchQuery] = useState('')
+    const [selectedCategory, setSelectedCategory] = useState<string[]>([])
 
     const { data: popularCourses, isLoading: isPopularLoading } =
         getPopularCoursesQuery()
@@ -35,9 +37,21 @@ export function Home() {
     const logged_in = cookie.access_token
     const destination = logged_in ? '/user' : '/sign_in'
     const user_button = logged_in ? 'Go to Profile' : 'Authorization'
+    const finalSearchQuery = `results/?search=${searchQuery}${
+        selectedCategory.length > 0
+            ? `&categories=${selectedCategory.join(',')}`
+            : ''
+    }`
+    console.log(`finalSearchQuery: ${finalSearchQuery}`)
     const logoutMutation = useLogout()
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSearchInputChange = (
+        e: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        setSearchQuery(e.target.value)
+    }
+
+    const handleLogout = async (e: React.FormEvent) => {
         e.preventDefault()
         try {
             const status = await logoutMutation.mutateAsync()
@@ -47,6 +61,15 @@ export function Home() {
             }
         } catch (err) {
             console.error('Logout failed:', err)
+        }
+    }
+    const handleCategoryChange = (categoryName: string) => {
+        if (selectedCategory.includes(categoryName)) {
+            setSelectedCategory(
+                selectedCategory.filter((c) => c !== categoryName)
+            )
+        } else {
+            setSelectedCategory([...selectedCategory, categoryName])
         }
     }
 
@@ -66,7 +89,7 @@ export function Home() {
                         {user_button}
                     </Button>
                 </Link>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleLogout}>
                     {logged_in && (
                         <button
                             type="submit"
@@ -87,17 +110,29 @@ export function Home() {
                     <input
                         type="text"
                         placeholder="Поиск курсов по языкам, технологиям..."
+                        value={searchQuery}
+                        onChange={handleSearchInputChange}
                     />
-                    <button>Найти</button>
+                    <Link to={finalSearchQuery}>
+                        <button>Найти</button>
+                    </Link>
                 </div>
             </section>
 
-            {/* Категории курсов */}
+            {/* Категории курсов  */}
             <section className="categories">
                 <h2>Категории</h2>
                 <div className="category-list">
                     {categories?.data.categories.map((category) => (
-                        <button key={category} className="category-btn">
+                        <button
+                            key={category}
+                            className={`category-btn${
+                                selectedCategory.includes(category)
+                                    ? ' selected'
+                                    : ''
+                            }`}
+                            onClick={() => handleCategoryChange(category)}
+                        >
                             {category}
                         </button>
                     ))}
