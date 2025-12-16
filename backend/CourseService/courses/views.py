@@ -180,3 +180,18 @@ class PopularCoursesAPIView(APIView):
             },
             status=status.HTTP_200_OK
         )
+
+class CoursesCategoriesAPIView(APIView):
+    """API endpoint для получения списка категорий курсов"""
+    
+    def get(self, request):
+        """Получить список всех категорий курсов"""
+        categories = Course.objects.values_list('category', flat=True).distinct()
+        
+        return Response(
+            {
+                'count': len(categories),
+                'categories': categories
+            },
+            status=status.HTTP_200_OK
+        )

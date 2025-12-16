@@ -5,6 +5,7 @@ from .views import (
     CourseCreateAPIView,
     CourseUpdateAPIView,
     CourseDeleteAPIView,
+    CoursesCategoriesAPIView,
     PopularCoursesAPIView
 )
 
@@ -15,4 +16,5 @@ urlpatterns = [
     path('<int:course_id>/', CourseDetailAPIView.as_view(), name='course_detail'),
     path('<int:course_id>/update/', CourseUpdateAPIView.as_view(), name='course_update'),
     path('<int:course_id>/delete/', CourseDeleteAPIView.as_view(), name='course_delete'),
+    path('categories/', CoursesCategoriesAPIView.as_view(), name='course_categories'),
 ]
