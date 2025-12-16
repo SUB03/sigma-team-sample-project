@@ -30,3 +30,20 @@ class Course(models.Model):
     category = models.CharField(max_length=100, choices=category_CHOICES, null=True, blank=True)
     def __str__(self):
         return self.title
+    
+
+class Review(models.Model):
+    """Модель отзыва на курс"""
+    id = models.AutoField(primary_key=True)
+    course = models.ForeignKey(Course, related_name='reviews', on_delete=models.CASCADE)
+    user_id = models.IntegerField(help_text="ID пользователя из User Service")
+    rating = models.IntegerField()
+    comment = models.TextField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'course_reviews'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"Review {self.id} for Course {self.course.id} by User {self.user_id}"

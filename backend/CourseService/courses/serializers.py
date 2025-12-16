@@ -1,6 +1,17 @@
 from rest_framework import serializers
-from .models import Course
+from .models import Course, Review
 
+class ReviewSerializer(serializers.Serializer):
+    class Meta:
+        model = Review
+        fields = ['id', 'course', 'user_id', 'comment', 'rating', 'created_at']
+        read_only_fields = ['id', 'created_at']
+
+    def validate_rating(self, value):
+        """Валидация рейтинга"""
+        if not (1 <= value <= 5):
+            raise serializers.ValidationError('Рейтинг должен быть от 1 до 5')
+        return value
 
 class CourseSerializer(serializers.ModelSerializer):
     """Сериализатор для модели Course"""
@@ -19,7 +30,8 @@ class CourseSerializer(serializers.ModelSerializer):
             'is_limited',
             'difficulty_level',
             'duration_hours',
-            'category'
+            'category',
+            'rating'
         ]
         read_only_fields = ['id', 'created_at', 'updated_at', 'popularity']
     

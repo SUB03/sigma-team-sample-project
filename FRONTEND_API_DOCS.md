@@ -239,8 +239,8 @@ localStorage.setItem('access_token', data.access);
 **Query параметры:**
 
 - `search` - поиск по названию, описанию и категории
-- `category` - фильтр по категории (programming, data_science, design, marketing, business, mathematics, other)
-- `difficulty` - beginner, intermediate, advanced
+- `categories` - фильтр по нескольким категориям через запятую (Programming, Data Science, Design, Marketing, Business, Mathematics, Other)
+- `difficulty` - Beginner, Intermediate, Advanced
 - `min_price` - минимальная цена
 - `max_price` - максимальная цена
 - `is_limited` - true/false (ограниченное количество)
@@ -252,7 +252,7 @@ const response = await fetch("http://localhost:8003/courses/");
 
 // С поиском и фильтрами
 const response = await fetch(
-  "http://localhost:8003/courses/?search=python&category=programming&difficulty=beginner&max_price=5000&sort_by=-popularity"
+  "http://localhost:8003/courses/?search=python&categories=Programming,Data Science&difficulty=Beginner&max_price=5000&sort_by=-popularity"
 );
 
 const data = await response.json();
@@ -264,12 +264,13 @@ const data = await response.json();
 //             "title": "Python для начинающих",
 //             "description": "Изучите Python с нуля",
 //             "price": "2999.00",
-//             "difficulty_level": "beginner",
+//             "difficulty_level": "Beginner",
 //             "duration_hours": 40,
 //             "popularity": 150,
 //             "is_limited": false,
 //             "quantity": null,
-//             "category": "programming",
+//             "category": "Programming",
+//             "rating": 4.5,
 //             "created_at": "2025-12-01T10:00:00Z",
 //             "updated_at": "2025-12-10T15:30:00Z"
 //         },
@@ -319,9 +320,9 @@ const response = await fetch("http://localhost:8003/courses/create/", {
     title: "Новый курс",
     description: "Описание курса",
     price: 4999.0,
-    difficulty_level: "intermediate", // beginner, intermediate, advanced
+    difficulty_level: "Intermediate", // Beginner, Intermediate, Advanced
     duration_hours: 30,
-    category: "programming", // programming, data_science, design, marketing, business, mathematics, other
+    category: "Programming", // Programming, Data Science, Design, Marketing, Business, Mathematics, Other
     is_limited: false,
     quantity: null, // null если не ограничен
     popularity: 0, // по умолчанию 0
@@ -352,9 +353,9 @@ const response = await fetch("http://localhost:8003/courses/1/update/", {
     title: "Обновленное название",
     description: "Новое описание",
     price: 5999.0,
-    difficulty_level: "advanced",
+    difficulty_level: "Advanced",
     duration_hours: 50,
-    category: "data_science",
+    category: "Data Science",
     is_limited: true,
     quantity: 100,
     popularity: 250,
@@ -413,18 +414,102 @@ const data = await response.json();
 // {
 //     "count": 7,
 //     "categories": [
-//         "programming",
-//         "data_science",
-//         "design",
-//         "marketing",
-//         "business",
-//         "mathematics",
-//         "other"
+//         "Programming",
+//         "Data Science",
+//         "Design",
+//         "Marketing",
+//         "Business",
+//         "Mathematics",
+//         "Other"
 //     ]
 // }
 ```
 
 **Примечание:** Возвращает только те категории, которые используются в существующих курсах.
+
+### 2.8. Получить отзывы курса
+
+**GET** `/courses/<course_id>/reviews/`
+
+```javascript
+const response = await fetch("http://localhost:8003/courses/1/reviews/");
+const data = await response.json();
+// Response:
+// {
+//     "count": 3,
+//     "reviews": [
+//         {
+//             "id": 1,
+//             "course": 1,
+//             "user_id": 5,
+//             "rating": 5,
+//             "comment": "Отличный курс! Все понятно объяснено.",
+//             "created_at": "2025-12-10T10:00:00Z"
+//         },
+//         {
+//             "id": 2,
+//             "course": 1,
+//             "user_id": 7,
+//             "rating": 4,
+//             "comment": "Хороший курс, но можно было больше практики.",
+//             "created_at": "2025-12-09T15:30:00Z"
+//         },
+//         ...
+//     ]
+// }
+```
+
+### 2.9. Добавить отзыв к курсу (Требуется аутентификация)
+
+**POST** `/courses/<course_id>/reviews/add/`
+
+```javascript
+const response = await fetch("http://localhost:8003/courses/1/reviews/add/", {
+  method: "POST",
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    rating: 5,
+    comment: "Превосходный курс! Рекомендую всем начинающим.", // опционально
+  }),
+});
+
+const data = await response.json();
+// Response:
+// {
+//     "message": "Отзыв успешно добавлен",
+//     "review": {
+//         "id": 10,
+//         "course": 1,
+//         "user_id": 3,
+//         "rating": 5,
+//         "comment": "Превосходный курс! Рекомендую всем начинающим.",
+//         "created_at": "2025-12-16T12:00:00Z"
+//     }
+// }
+```
+
+**Валидация:**
+- `rating` - обязательное поле, целое число от 1 до 5
+- `comment` - опциональное текстовое поле
+
+### 2.10. Получить средний рейтинг курса
+
+**GET** `/courses/<course_id>/average_rating/`
+
+```javascript
+const response = await fetch("http://localhost:8003/courses/1/average_rating/");
+const data = await response.json();
+// Response:
+// {
+//     "course_id": 1,
+//     "average_rating": 4.5
+// }
+```
+
+**Примечание:** Если отзывов нет, `average_rating` будет 0.0
 
 ---
 
@@ -592,15 +677,39 @@ const { access, refresh } = await registerResponse.json();
 localStorage.setItem("access_token", access);
 localStorage.setItem("refresh_token", refresh);
 
-// 2. Получить список курсов
-const coursesResponse = await fetch("http://localhost:8003/courses/");
+// 2. Получить категории курсов
+const categoriesResponse = await fetch("http://localhost:8003/courses/categories/");
+const { categories } = await categoriesResponse.json();
+
+// 3. Получить список курсов с фильтрацией
+const coursesResponse = await fetch(
+  "http://localhost:8003/courses/?categories=Programming&difficulty=Beginner&sort_by=-popularity"
+);
 const { courses } = await coursesResponse.json();
 
-// 3. Просмотр деталей курса
+// 4. Поиск курсов
+const searchResponse = await fetch(
+  "http://localhost:8003/courses/?search=python"
+);
+const searchResults = await searchResponse.json();
+
+// 5. Просмотр деталей курса
 const courseResponse = await fetch(
   `http://localhost:8003/courses/${courses[0].id}/`
 );
 const course = await courseResponse.json();
+
+// 6. Получить отзывы курса
+const reviewsResponse = await fetch(
+  `http://localhost:8003/courses/${courses[0].id}/reviews/`
+);
+const { reviews } = await reviewsResponse.json();
+
+// 7. Получить средний рейтинг курса
+const ratingResponse = await fetch(
+  `http://localhost:8003/courses/${courses[0].id}/average_rating/`
+);
+const { average_rating } = await ratingResponse.json();
 ```
 
 ### Сценарий 2: Покупка курса
@@ -879,11 +988,13 @@ import { useState, useEffect } from "react";
 
 export function useCourses(filters = {}) {
   const [courses, setCourses] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     fetchCourses();
+    fetchCategories();
   }, [JSON.stringify(filters)]);
 
   const fetchCourses = async () => {
@@ -904,7 +1015,98 @@ export function useCourses(filters = {}) {
     }
   };
 
-  return { courses, loading, error, refetch: fetchCourses };
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch("http://localhost:8003/courses/categories/");
+      const data = await response.json();
+      setCategories(data.categories);
+    } catch (err) {
+      console.error("Failed to fetch categories:", err);
+    }
+  };
+
+  return { courses, categories, loading, error, refetch: fetchCourses };
+}
+
+// Пример использования:
+// const { courses, categories, loading } = useCourses({ 
+//   search: 'python', 
+//   categories: 'Programming,Data Science',
+//   difficulty: 'Beginner',
+//   sort_by: '-popularity' 
+// });
+```
+
+### useReviews Hook
+
+```javascript
+import { useState, useEffect } from "react";
+
+export function useReviews(courseId) {
+  const [reviews, setReviews] = useState([]);
+  const [averageRating, setAverageRating] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (courseId) {
+      fetchReviews();
+      fetchAverageRating();
+    }
+  }, [courseId]);
+
+  const fetchReviews = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:8003/courses/${courseId}/reviews/`
+      );
+      const data = await response.json();
+      setReviews(data.reviews);
+    } catch (error) {
+      console.error("Failed to fetch reviews:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchAverageRating = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:8003/courses/${courseId}/average_rating/`
+      );
+      const data = await response.json();
+      setAverageRating(data.average_rating);
+    } catch (error) {
+      console.error("Failed to fetch average rating:", error);
+    }
+  };
+
+  const addReview = async (rating, comment) => {
+    try {
+      const response = await fetch(
+        `http://localhost:8003/courses/${courseId}/reviews/add/`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ rating, comment }),
+        }
+      );
+
+      if (response.ok) {
+        await fetchReviews(); // Обновить список отзывов
+        await fetchAverageRating(); // Обновить средний рейтинг
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error("Failed to add review:", error);
+      return false;
+    }
+  };
+
+  return { reviews, averageRating, loading, addReview, refetch: fetchReviews };
 }
 ```
 

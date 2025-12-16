@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from .models import Course
-from .serializers import CourseSerializer
+from .serializers import CourseSerializer, ReviewSerializer
 
 
 class CourseListAPIView(APIView):
@@ -195,4 +195,75 @@ class CoursesCategoriesAPIView(APIView):
                 'categories': categories
             },
             status=status.HTTP_200_OK
+        )
+
+class CourseReviewsAPIView(APIView):
+    """API endpoint для получения отзывов о курсе"""
+    
+    def get(self, request, course_id):
+        """Получить отзывы для конкретного курса"""
+        course = get_object_or_404(Course, id=course_id)
+        reviews = course.reviews.all()
+        serializer = ReviewSerializer(reviews, many=True)
+        
+        return Response(
+            {
+                'count': reviews.count(),
+                'reviews': serializer.data
+            },
+            status=status.HTTP_200_OK
+        )
+
+class GetCourseAverageRatingAPIView(APIView):
+    """API endpoint для получения среднего рейтинга курса"""
+    
+    def get(self, request, course_id):
+        """Получить средний рейтинг для конкретного курса"""
+        course = get_object_or_404(Course, id=course_id)
+        reviews = course.reviews.all()
+        
+        if not reviews.exists():
+            average_rating = 0.0
+        else:
+            total_rating = sum(review.rating for review in reviews)
+            average_rating = total_rating / reviews.count()
+        
+        return Response(
+            {
+                'course_id': course.id,
+                'average_rating': round(average_rating, 2)
+            },
+            status=status.HTTP_200_OK
+        )
+
+class CourseAddReviewAPIView(APIView):
+    """API endpoint для добавления отзыва к курсу"""
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request, course_id):
+        """Добавить отзыв к конкретному курсу"""
+        course = get_object_or_404(Course, id=course_id)
+        data = request.data.copy()
+        data['course'] = course.id
+        data['user_id'] = request.user.id  # Предполагается, что у пользователя есть поле id
+        
+        serializer = ReviewSerializer(data=data)
+        
+        if serializer.is_valid():
+            review = serializer.save()
+            
+            return Response(
+                {
+                    'message': 'Отзыв успешно добавлен',
+                    'review': ReviewSerializer(review).data
+                },
+                status=status.HTTP_201_CREATED
+            )
+        
+        return Response(
+            {
+                'error': 'Ошибка валидации данных',
+                'details': serializer.errors
+            },
+            status=status.HTTP_400_BAD_REQUEST
         )
