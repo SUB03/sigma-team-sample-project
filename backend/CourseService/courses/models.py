@@ -3,18 +3,18 @@ from django.db import models
 # Create your models here.
 class Course(models.Model):
     difficulty_level_CHOICES = [
-        ('beginner', 'Beginner'),
-        ('intermediate', 'Intermediate'),
-        ('advanced', 'Advanced'),
+        ('Beginner', 'Beginner'),
+        ('Intermediate', 'Intermediate'),
+        ('Advanced', 'Advanced'),
     ]
     category_CHOICES = [
-        ('programming', 'Programming'),
-        ('data_science', 'Data Science'),
-        ('design', 'Design'),
-        ('marketing', 'Marketing'),
-        ('business', 'Business'),
-        ('mathematics', 'Mathematics'),
-        ('other', 'Other'),
+        ('Programming', 'Programming'),
+        ('Data Science', 'Data Science'),
+        ('Design', 'Design'),
+        ('Marketing', 'Marketing'),
+        ('Business', 'Business'),
+        ('Mathematics', 'Mathematics'),
+        ('Other', 'Other'),
     ]
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=200)

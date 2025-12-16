@@ -238,6 +238,8 @@ localStorage.setItem('access_token', data.access);
 
 **Query параметры:**
 
+- `search` - поиск по названию, описанию и категории
+- `category` - фильтр по категории (programming, data_science, design, marketing, business, mathematics, other)
 - `difficulty` - beginner, intermediate, advanced
 - `min_price` - минимальная цена
 - `max_price` - максимальная цена
@@ -248,9 +250,9 @@ localStorage.setItem('access_token', data.access);
 // Все курсы
 const response = await fetch("http://localhost:8003/courses/");
 
-// С фильтрами
+// С поиском и фильтрами
 const response = await fetch(
-  "http://localhost:8003/courses/?difficulty=beginner&max_price=5000&sort_by=-popularity"
+  "http://localhost:8003/courses/?search=python&category=programming&difficulty=beginner&max_price=5000&sort_by=-popularity"
 );
 
 const data = await response.json();
@@ -267,6 +269,7 @@ const data = await response.json();
 //             "popularity": 150,
 //             "is_limited": false,
 //             "quantity": null,
+//             "category": "programming",
 //             "created_at": "2025-12-01T10:00:00Z",
 //             "updated_at": "2025-12-10T15:30:00Z"
 //         },
@@ -318,6 +321,7 @@ const response = await fetch("http://localhost:8003/courses/create/", {
     price: 4999.0,
     difficulty_level: "intermediate", // beginner, intermediate, advanced
     duration_hours: 30,
+    category: "programming", // programming, data_science, design, marketing, business, mathematics, other
     is_limited: false,
     quantity: null, // null если не ограничен
     popularity: 0, // по умолчанию 0
@@ -350,6 +354,7 @@ const response = await fetch("http://localhost:8003/courses/1/update/", {
     price: 5999.0,
     difficulty_level: "advanced",
     duration_hours: 50,
+    category: "data_science",
     is_limited: true,
     quantity: 100,
     popularity: 250,
@@ -396,6 +401,30 @@ const data = await response.json();
 //     "message": "Курс \"Python для начинающих\" успешно удален"
 // }
 ```
+
+### 2.7. Получить список категорий
+
+**GET** `/courses/categories/`
+
+```javascript
+const response = await fetch("http://localhost:8003/courses/categories/");
+const data = await response.json();
+// Response:
+// {
+//     "count": 7,
+//     "categories": [
+//         "programming",
+//         "data_science",
+//         "design",
+//         "marketing",
+//         "business",
+//         "mathematics",
+//         "other"
+//     ]
+// }
+```
+
+**Примечание:** Возвращает только те категории, которые используются в существующих курсах.
 
 ---
 
