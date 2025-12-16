@@ -17,12 +17,7 @@ class CourseListAPIView(APIView):
         
         # Фильтры
         search_query = request.query_params.get('search')
-        if search_query:
-            courses = courses.filter(
-                Q(title__icontains=search_query) |
-                Q(description__icontains=search_query) |
-                Q(category__icontains=search_query)
-            )
+
         difficulty = request.query_params.get('difficulty')
         min_price = request.query_params.get('min_price')
         max_price = request.query_params.get('max_price')
@@ -30,6 +25,12 @@ class CourseListAPIView(APIView):
         categories = request.query_params.get('categories')
         if categories:
             courses = courses.filter(category__in=categories.split(','))
+        if search_query:
+            courses = courses.filter(
+                Q(title__icontains=search_query) |
+                Q(description__icontains=search_query) |
+                Q(category__icontains=search_query)
+            )
         if difficulty:
             courses = courses.filter(difficulty_level=difficulty)
         if min_price:
