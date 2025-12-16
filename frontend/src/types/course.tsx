@@ -24,3 +24,16 @@ export interface CourseData {
     difficulty_level: string
     duration_hours: number
 }
+
+export interface review {
+    id: number
+    course_id: number
+    user_id: number
+    rating: number
+    comment: string
+    created_at: string
+}
+export interface CourseReviews {
+    count: number
+    reviews: review[]
+}

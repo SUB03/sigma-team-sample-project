@@ -1,6 +1,11 @@
 import { useQuery } from '@tanstack/react-query'
 import { $api, course_url } from '../api'
-import type { AllCoursesResponse, PopularCoursesData } from '../types/course'
+import type {
+    AllCoursesResponse,
+    CourseData,
+    CourseReviews,
+    PopularCoursesData,
+} from '../types/course'
 
 export interface CourseQueryData {
     search?: string
@@ -37,6 +42,43 @@ export const getCoursesQuery = (queryData?: CourseQueryData) => {
         queryFn: async () => {
             return $api.get<AllCoursesResponse>(
                 queryData?.url || `${course_url}/courses/`,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    skipAuth: true,
+                }
+            )
+        },
+        retry: true,
+        retryDelay: retryDelay,
+        staleTime: staleTime,
+    })
+}
+
+export const getCourseQuery = (course_id: number) => {
+    return useQuery({
+        queryKey: ['course', course_id],
+        queryFn: async () => {
+            return $api.get<CourseData>(`${course_url}/courses/${course_id}/`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                skipAuth: true,
+            })
+        },
+        retry: true,
+        retryDelay: retryDelay,
+        staleTime: staleTime,
+    })
+}
+
+export const getReviewsQuery = (course_id: number) => {
+    return useQuery({
+        queryKey: ['reviews', course_id],
+        queryFn: async () => {
+            return $api.get<CourseReviews>(
+                `${course_url}/courses/${course_id}/reviews/`,
                 {
                     headers: {
                         'Content-Type': 'application/json',
