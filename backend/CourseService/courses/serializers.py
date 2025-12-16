@@ -18,7 +18,8 @@ class CourseSerializer(serializers.ModelSerializer):
             'popularity',
             'is_limited',
             'difficulty_level',
-            'duration_hours'
+            'duration_hours',
+            'category'
         ]
         read_only_fields = ['id', 'created_at', 'updated_at', 'popularity']
     
