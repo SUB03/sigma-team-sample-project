@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import type { UserSignUpData } from '../types/auth'
 import { useSignUpMutation } from '../mutations/authMutations'
 import { useAuthTokens } from '../hooks/useAuthTokens'
-import '../csss/SignUp.css'
+import '../CSS/SignUp.css'
 
 export function SignUp() {
     const { saveAuthTokens } = useAuthTokens()

@@ -2,7 +2,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import type { CourseData } from '../types/course'
-import '../csss/CourseCard.css'
+import '../CSS/CourseCard.css'
 
 interface CourseCardProps {
     course: CourseData

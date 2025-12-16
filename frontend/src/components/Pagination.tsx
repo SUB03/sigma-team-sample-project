@@ -1,6 +1,6 @@
 // components/Pagination.tsx
 import React, { useState, useEffect } from 'react'
-import '../csss/Pagination.css'
+import '../CSS/Pagination.css'
 
 interface PaginationProps {
     currentPage: number
