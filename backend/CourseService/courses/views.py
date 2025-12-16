@@ -27,9 +27,9 @@ class CourseListAPIView(APIView):
         min_price = request.query_params.get('min_price')
         max_price = request.query_params.get('max_price')
         is_limited = request.query_params.get('is_limited')
-        category = request.query_params.get('category')
-        if category:
-            courses = courses.filter(category=category)
+        categories = request.query_params.get('categories')
+        if categories:
+            courses = courses.filter(category__in=categories.split(','))
         if difficulty:
             courses = courses.filter(difficulty_level=difficulty)
         if min_price:
