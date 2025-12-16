@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
+from django.db.models import Q
 from .models import Course
 from .serializers import CourseSerializer
 
@@ -15,11 +16,20 @@ class CourseListAPIView(APIView):
         courses = Course.objects.all()
         
         # Фильтры
+        search_query = request.query_params.get('search')
+        if search_query:
+            courses = courses.filter(
+                Q(title__icontains=search_query) |
+                Q(description__icontains=search_query) |
+                Q(category__icontains=search_query)
+            )
         difficulty = request.query_params.get('difficulty')
         min_price = request.query_params.get('min_price')
         max_price = request.query_params.get('max_price')
         is_limited = request.query_params.get('is_limited')
-        
+        category = request.query_params.get('category')
+        if category:
+            courses = courses.filter(category=category)
         if difficulty:
             courses = courses.filter(difficulty_level=difficulty)
         if min_price:

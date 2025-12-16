@@ -11,6 +11,7 @@
       "popularity": 350,
       "is_limited": false,
       "quantity": null,
+      "category": "programming",
       "created_at": "2025-12-01T10:00:00Z",
       "updated_at": "2025-12-01T10:00:00Z"
     }
@@ -27,6 +28,7 @@
       "popularity": 280,
       "is_limited": false,
       "quantity": null,
+      "category": "programming",
       "created_at": "2025-12-02T10:00:00Z",
       "updated_at": "2025-12-02T10:00:00Z"
     }
@@ -43,6 +45,7 @@
       "popularity": 195,
       "is_limited": true,
       "quantity": 50,
+      "category": "programming",
       "created_at": "2025-12-03T10:00:00Z",
       "updated_at": "2025-12-03T10:00:00Z"
     }
@@ -59,6 +62,7 @@
       "popularity": 420,
       "is_limited": false,
       "quantity": null,
+      "category": "programming",
       "created_at": "2025-12-04T10:00:00Z",
       "updated_at": "2025-12-04T10:00:00Z"
     }
@@ -75,6 +79,7 @@
       "popularity": 210,
       "is_limited": false,
       "quantity": null,
+      "category": "data_science",
       "created_at": "2025-12-05T10:00:00Z",
       "updated_at": "2025-12-05T10:00:00Z"
     }
@@ -91,6 +96,7 @@
       "popularity": 520,
       "is_limited": false,
       "quantity": null,
+      "category": "programming",
       "created_at": "2025-12-06T10:00:00Z",
       "updated_at": "2025-12-06T10:00:00Z"
     }
@@ -107,6 +113,7 @@
       "popularity": 310,
       "is_limited": false,
       "quantity": null,
+      "category": "programming",
       "created_at": "2025-12-07T10:00:00Z",
       "updated_at": "2025-12-07T10:00:00Z"
     }
@@ -123,6 +130,7 @@
       "popularity": 165,
       "is_limited": true,
       "quantity": 30,
+      "category": "programming",
       "created_at": "2025-12-08T10:00:00Z",
       "updated_at": "2025-12-08T10:00:00Z"
     }
@@ -139,6 +147,7 @@
       "popularity": 245,
       "is_limited": false,
       "quantity": null,
+      "category": "mathematics",
       "created_at": "2025-12-09T10:00:00Z",
       "updated_at": "2025-12-09T10:00:00Z"
     }
@@ -155,6 +164,7 @@
       "popularity": 185,
       "is_limited": true,
       "quantity": 75,
+      "category": "programming",
       "created_at": "2025-12-10T10:00:00Z",
       "updated_at": "2025-12-10T10:00:00Z"
     }

@@ -7,6 +7,15 @@ class Course(models.Model):
         ('intermediate', 'Intermediate'),
         ('advanced', 'Advanced'),
     ]
+    category_CHOICES = [
+        ('programming', 'Programming'),
+        ('data_science', 'Data Science'),
+        ('design', 'Design'),
+        ('marketing', 'Marketing'),
+        ('business', 'Business'),
+        ('mathematics', 'Mathematics'),
+        ('other', 'Other'),
+    ]
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=200)
     description = models.TextField()
@@ -18,5 +27,6 @@ class Course(models.Model):
     is_limited = models.BooleanField(default=False)
     difficulty_level = models.CharField(max_length=50, choices=difficulty_level_CHOICES, default='beginner')
     duration_hours = models.IntegerField(default=0)
+    category = models.CharField(max_length=100, choices=category_CHOICES, null=True, blank=True)
     def __str__(self):
         return self.title
