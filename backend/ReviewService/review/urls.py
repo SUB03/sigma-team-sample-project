@@ -16,5 +16,5 @@ urlpatterns = [
     path('<int:review_id>/delete/', DeleteReviewAPIView.as_view(), name='delete_review'),
     path('course/<int:course_id>/average/', CourseAverageRatingAPIView.as_view(), name='course_average_rating'),
     path('my-reviews/', UserReviewsAPIView.as_view(), name='user_reviews'),
-    path('course/<int:course_id>/user-review/', UserCourseReviewAPIView.as_view(), name='user_course_review')
+    path('my-reviews/<int:course_id>/', UserCourseReviewAPIView.as_view(), name='user_course_review')
 ]
