@@ -208,11 +208,15 @@ class UserCourseReviewAPIView(APIView):
                 status=status.HTTP_404_NOT_FOUND
             )
 
-        serializer = ReviewSerializer(review)
-
         return Response(
             {
-                'review': serializer.data
+                'id': review.id,
+                'course_id': review.course_id,
+                'user_id': review.user_id,
+                'rating': review.rating,
+                'comment': review.comment,
+                'created_at': review.created_at,
+                'updated_at': review.updated_at
             },
             status=status.HTTP_200_OK
         )
