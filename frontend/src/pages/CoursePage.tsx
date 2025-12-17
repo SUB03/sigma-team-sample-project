@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom'
-import { getCourseQuery, getReviewsQuery } from '../hooks/getCourses'
+import { getCourseQuery, getReviewsQuery } from '../hooks/useCourses'
 
 export function CoursePage() {
     const { id } = useParams<{ id: string }>()
@@ -9,8 +9,11 @@ export function CoursePage() {
     }
 
     const courseId = parseInt(id, 10)
-    const { data: course } = getCourseQuery(courseId)
     const { data: reviews } = getReviewsQuery(courseId)
+    const { data: course } = getCourseQuery(courseId)
+
+    console.log(reviews)
+    console.log(course)
 
     if (!course || !reviews) {
         return <div>Loading...</div>
@@ -23,6 +26,7 @@ export function CoursePage() {
             <p>Price: {course.data.price}</p>
             <p>Popularity: {course.data.popularity}</p>
             <h2>Reviews</h2>
+            {reviews.data.reviews.length === 0 && <p>No reviews yet.</p>}
             {reviews.data.reviews.map((review) => (
                 <div key={review.id}>
                     <p>Rating: {review.rating}</p>

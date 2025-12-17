@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import type { UserSignInData } from '../types/auth'
+import type { UserSignInData } from '../types/authData'
 import { useSignInMutation } from '../mutations/authMutations'
 import { useAuthTokens } from '../hooks/useAuthTokens'
 

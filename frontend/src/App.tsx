@@ -13,6 +13,7 @@ import { UserSettings } from './pages/UserSettings'
 import { UserProfile } from './pages/UserProfile'
 import { AuthProvider } from './components/AuthProvider'
 import { Search } from './pages/Search'
+import { CoursePage } from './pages/CoursePage'
 
 const queryClient = new QueryClient()
 
@@ -26,6 +27,10 @@ function App() {
                             {/* public routes */}
                             <Route path="/" element={<Home />} />
                             <Route path="/results" element={<Search />} />
+                            <Route
+                                path="/courses/:id"
+                                element={<CoursePage />}
+                            ></Route>
 
                             {/* if user is unauthentificated they cannot access these */}
                             <Route element={<ProtectedRoute />}>

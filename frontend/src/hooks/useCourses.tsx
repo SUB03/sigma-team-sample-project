@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query'
-import { $api, course_url } from '../api'
+import { $api, course_url, reviews_url } from '../api'
 import type {
     AllCoursesResponse,
     CourseData,
     CourseReviews,
     PopularCoursesData,
-} from '../types/course'
+} from '../types/coursesData'
 
 export interface CourseQueryData {
     search?: string
@@ -78,7 +78,7 @@ export const getReviewsQuery = (course_id: number) => {
         queryKey: ['reviews', course_id],
         queryFn: async () => {
             return $api.get<CourseReviews>(
-                `${course_url}/courses/${course_id}/reviews/`,
+                `${reviews_url}/reviews/course/${course_id}/`,
                 {
                     headers: {
                         'Content-Type': 'application/json',
