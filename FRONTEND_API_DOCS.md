@@ -461,6 +461,9 @@ const data = await response.json();
 // Response:
 // {
 //     "count": 25,  // Всего отзывов
+//     "total_pages": 3,  // Всего страниц
+//     "current_page": 1,  // Текущая страница
+//     "page_size": 10,  // Размер страницы
 //     "next": "http://localhost:8004/reviews/course/1/?page=2",  // Следующая страница
 //     "previous": null,  // Предыдущая страница
 //     "results": [  // Отзывы на текущей странице
@@ -611,6 +614,9 @@ const data = await response.json();
 // Response:
 // {
 //     "count": 5,  // Всего ваших отзывов
+//     "total_pages": 1,  // Всего страниц
+//     "current_page": 1,  // Текущая страница
+//     "page_size": 10,  // Размер страницы
 //     "next": null,  // Следующая страница (null если последняя)
 //     "previous": null,  // Предыдущая страница
 //     "results": [  // Отзывы на текущей странице
@@ -1167,6 +1173,9 @@ export function useReviews(courseId, pageSize = 10) {
   const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState({
     count: 0,
+    total_pages: 0,
+    current_page: 1,
+    page_size: pageSize,
     next: null,
     previous: null,
   });
@@ -1189,6 +1198,9 @@ export function useReviews(courseId, pageSize = 10) {
       setReviews(data.results);
       setPagination({
         count: data.count,
+        total_pages: data.total_pages,
+        current_page: data.current_page,
+        page_size: data.page_size,
         next: data.next,
         previous: data.previous,
       });
@@ -1268,14 +1280,26 @@ export function useReviews(courseId, pageSize = 10) {
 }
 
 // Пример использования с пагинацией:
-// const { reviews, pagination, currentPage, nextPage, previousPage } = useReviews(1);
+// const { reviews, pagination, currentPage, nextPage, previousPage, goToPage } = useReviews(1);
 //
 // <div>
 //   {reviews.map(review => <ReviewCard key={review.id} review={review} />)}
 //   <div className="pagination">
 //     <button onClick={previousPage} disabled={!pagination.previous}>Previous</button>
-//     <span>Page {currentPage} of {Math.ceil(pagination.count / 10)}</span>
+//     <span>Page {pagination.current_page} of {pagination.total_pages}</span>
+//     <span>({pagination.count} total reviews)</span>
 //     <button onClick={nextPage} disabled={!pagination.next}>Next</button>
+//     
+//     {/* Или номера страниц */}
+//     {Array.from({ length: pagination.total_pages }, (_, i) => i + 1).map(page => (
+//       <button 
+//         key={page} 
+//         onClick={() => goToPage(page)}
+//         disabled={page === pagination.current_page}
+//       >
+//         {page}
+//       </button>
+//     ))}
 //   </div>
 // </div>
 ```
