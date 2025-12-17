@@ -443,28 +443,35 @@ const data = await response.json();
 
 **GET** `/reviews/course/<course_id>/`
 
+**Query параметры (пагинация):**
+- `page` - номер страницы (по умолчанию 1)
+- `page_size` - количество отзывов на странице (по умолчанию 10, макс 100)
+
 ```javascript
+// Первая страница (10 отзывов)
 const response = await fetch("http://localhost:8004/reviews/course/1/");
+
+// Вторая страница
+const response = await fetch("http://localhost:8004/reviews/course/1/?page=2");
+
+// Кастомный размер страницы (20 отзывов на странице)
+const response = await fetch("http://localhost:8004/reviews/course/1/?page_size=20");
+
 const data = await response.json();
 // Response:
 // {
-//     "count": 3,
-//     "reviews": [
+//     "count": 25,  // Всего отзывов
+//     "next": "http://localhost:8004/reviews/course/1/?page=2",  // Следующая страница
+//     "previous": null,  // Предыдущая страница
+//     "results": [  // Отзывы на текущей странице
 //         {
 //             "id": 1,
-//             "course": 1,
+//             "course_id": 1,
 //             "user_id": 5,
 //             "rating": 5,
 //             "comment": "Отличный курс! Все понятно объяснено.",
-//             "created_at": "2025-12-10T10:00:00Z"
-//         },
-//         {
-//             "id": 2,
-//             "course": 1,
-//             "user_id": 7,
-//             "rating": 4,
-//             "comment": "Хороший курс, но можно было больше практики.",
-//             "created_at": "2025-12-09T15:30:00Z"
+//             "created_at": "2025-12-10T10:00:00Z",
+//             "updated_at": "2025-12-10T10:00:00Z"
 //         },
 //         ...
 //     ]
@@ -589,6 +596,10 @@ const data = await response.json();
 
 **GET** `/reviews/my-reviews/`
 
+**Query параметры (пагинация):**
+- `page` - номер страницы (по умолчанию 1)
+- `page_size` - количество отзывов на странице (по умолчанию 10, макс 100)
+
 ```javascript
 const response = await fetch("http://localhost:8004/reviews/my-reviews/", {
   headers: {
@@ -599,8 +610,10 @@ const response = await fetch("http://localhost:8004/reviews/my-reviews/", {
 const data = await response.json();
 // Response:
 // {
-//     "count": 5,
-//     "reviews": [
+//     "count": 5,  // Всего ваших отзывов
+//     "next": null,  // Следующая страница (null если последняя)
+//     "previous": null,  // Предыдущая страница
+//     "results": [  // Отзывы на текущей странице
 //         {
 //             "id": 10,
 //             "course_id": 1,
@@ -1148,25 +1161,37 @@ export function useCourses(filters = {}) {
 ```javascript
 import { useState, useEffect } from "react";
 
-export function useReviews(courseId) {
+export function useReviews(courseId, pageSize = 10) {
   const [reviews, setReviews] = useState([]);
   const [averageRating, setAverageRating] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [pagination, setPagination] = useState({
+    count: 0,
+    next: null,
+    previous: null,
+  });
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     if (courseId) {
-      fetchReviews();
+      fetchReviews(currentPage);
       fetchAverageRating();
     }
-  }, [courseId]);
+  }, [courseId, currentPage]);
 
-  const fetchReviews = async () => {
+  const fetchReviews = async (page = 1) => {
     try {
+      setLoading(true);
       const response = await fetch(
-        `http://localhost:8004/reviews/course/${courseId}/`
+        `http://localhost:8004/reviews/course/${courseId}/?page=${page}&page_size=${pageSize}`
       );
       const data = await response.json();
-      setReviews(data.reviews);
+      setReviews(data.results);
+      setPagination({
+        count: data.count,
+        next: data.next,
+        previous: data.previous,
+      });
     } catch (error) {
       console.error("Failed to fetch reviews:", error);
     } finally {
@@ -1212,8 +1237,47 @@ export function useReviews(courseId) {
     }
   };
 
-  return { reviews, averageRating, loading, addReview, refetch: fetchReviews };
+  const nextPage = () => {
+    if (pagination.next) {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
+
+  const previousPage = () => {
+    if (pagination.previous) {
+      setCurrentPage((prev) => prev - 1);
+    }
+  };
+
+  const goToPage = (page) => {
+    setCurrentPage(page);
+  };
+
+  return {
+    reviews,
+    averageRating,
+    loading,
+    pagination,
+    currentPage,
+    addReview,
+    nextPage,
+    previousPage,
+    goToPage,
+    refetch: fetchReviews,
+  };
 }
+
+// Пример использования с пагинацией:
+// const { reviews, pagination, currentPage, nextPage, previousPage } = useReviews(1);
+//
+// <div>
+//   {reviews.map(review => <ReviewCard key={review.id} review={review} />)}
+//   <div className="pagination">
+//     <button onClick={previousPage} disabled={!pagination.previous}>Previous</button>
+//     <span>Page {currentPage} of {Math.ceil(pagination.count / 10)}</span>
+//     <button onClick={nextPage} disabled={!pagination.next}>Next</button>
+//   </div>
+// </div>
 ```
 
 ### usePurchases Hook

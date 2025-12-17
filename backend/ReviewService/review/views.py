@@ -2,27 +2,33 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.pagination import PageNumberPagination
 from django.shortcuts import get_object_or_404
 from django.db.models import Avg
 from .models import Review
 from .serializers import ReviewSerializer
 
 
+class ReviewPagination(PageNumberPagination):
+    """Кастомная пагинация для отзывов"""
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 100
+
+
 class CourseReviewsAPIView(APIView):
     """API endpoint для получения отзывов курса"""
     
     def get(self, request, course_id):
-        """Получить все отзывы для конкретного курса"""
-        reviews = Review.objects.filter(course_id=course_id)
-        serializer = ReviewSerializer(reviews, many=True)
+        """Получить все отзывы для конкретного курса с пагинацией"""
+        reviews = Review.objects.filter(course_id=course_id).order_by('-created_at')
         
-        return Response(
-            {
-                'count': reviews.count(),
-                'reviews': serializer.data
-            },
-            status=status.HTTP_200_OK
-        )
+        # Применяем пагинацию
+        paginator = ReviewPagination()
+        paginated_reviews = paginator.paginate_queryset(reviews, request)
+        serializer = ReviewSerializer(paginated_reviews, many=True)
+        
+        return paginator.get_paginated_response(serializer.data)
 
 
 class AddReviewAPIView(APIView):
@@ -164,14 +170,37 @@ class UserReviewsAPIView(APIView):
     permission_classes = [IsAuthenticated]
     
     def get(self, request):
-        """Получить все отзывы текущего пользователя"""
-        reviews = Review.objects.filter(user_id=request.user.id)
-        serializer = ReviewSerializer(reviews, many=True)
+        """Получить все отзывы текущего пользователя с пагинацией"""
+        reviews = Review.objects.filter(user_id=request.user.id).order_by('-created_at')
         
+        # Применяем пагинацию
+        paginator = ReviewPagination()
+        paginated_reviews = paginator.paginate_queryset(reviews, request)
+        serializer = ReviewSerializer(paginated_reviews, many=True)
+        
+        return paginator.get_paginated_response(serializer.data)
+
+class UserCourseReviewAPIView(APIView):
+    """API endpoint для получения отзыва пользователя на конкретный курс"""
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, course_id):
+        """Получить отзыв текущего пользователя на конкретный курс"""
+        review = Review.objects.filter(course_id=course_id, user_id=request.user.id).first()
+
+        if not review:
+            return Response(
+                {
+                    'message': 'Отзыв не найден'
+                },
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        serializer = ReviewSerializer(review)
+
         return Response(
             {
-                'count': reviews.count(),
-                'reviews': serializer.data
+                'review': serializer.data
             },
             status=status.HTTP_200_OK
         )
