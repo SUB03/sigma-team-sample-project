@@ -1,8 +1,6 @@
 // components/CourseCard.tsx
-import React from 'react'
 import { Link } from 'react-router-dom'
-import type { CourseData } from '../types/course'
-import '../CSS/CourseCard.css'
+import type { CourseData } from '../types/coursesData'
 
 interface CourseCardProps {
     course: CourseData
@@ -10,11 +8,7 @@ interface CourseCardProps {
     onClick?: () => void
 }
 
-const CourseCard: React.FC<CourseCardProps> = ({
-    course,
-    isPopular = false,
-    onClick,
-}) => {
+function CourseCard({ course, isPopular = false }: CourseCardProps) {
     const {
         id,
         title,
@@ -39,26 +33,14 @@ const CourseCard: React.FC<CourseCardProps> = ({
         const hasHalfStar = rating % 1 >= 0.5
 
         return (
-            <div className="stars">
+            <div>
                 {[...Array(5)].map((_, index) => {
                     if (index < fullStars) {
-                        return (
-                            <span key={index} className="star full">
-                                ★
-                            </span>
-                        )
+                        return <span key={index}>★</span>
                     } else if (index === fullStars && hasHalfStar) {
-                        return (
-                            <span key={index} className="star half">
-                                ★
-                            </span>
-                        )
+                        return <span key={index}>★</span>
                     }
-                    return (
-                        <span key={index} className="star empty">
-                            ★
-                        </span>
-                    )
+                    return <span key={index}>★</span>
                 })}
             </div>
         )
@@ -89,55 +71,41 @@ const CourseCard: React.FC<CourseCardProps> = ({
         <div>
             {/* Бейдж для популярных курсов */}
             {isPopular && (
-                <div className="popular-badge">
-                    <span className="fire-icon">🔥</span> Популярный
+                <div>
+                    <span>🔥</span> Популярный
                 </div>
             )}
 
             {/* Бейдж для премиум курсов */}
             {price && price > 0 && (
-                <div className="premium-badge">
-                    <span className="crown-icon">👑</span> Премиум
+                <div>
+                    <span>👑</span> Премиум
                 </div>
             )}
 
             {/* Изображение курса */}
-            <div className="course-image-container">
+            <div>
                 {/* <img
                     src={imageUrl || '/default-course.jpg'}
                     alt={title}
-                    className="course-image"
                     loading="lazy"
                 /> */}
-                <div className="image-overlay">
-                    <button
-                        className="quick-view-btn"
-                        onClick={(e) => {
-                            e.preventDefault()
-                            e.stopPropagation()
-                            if (onClick) onClick()
-                        }}
-                    >
-                        Быстрый просмотр
-                    </button>
-                </div>
-                <div className="course-stats">
-                    <span className="stat">👥 {0}</span>
-                    <span className="stat">
-                        ⏱️ {formatDuration(duration_hours || 0)}
-                    </span>
+
+                <div>
+                    <span>👥 {0}</span>
+                    <span>⏱️ {formatDuration(duration_hours || 0)}</span>
                 </div>
             </div>
 
             {/* Контент карточки */}
-            <div className="course-content">
+            <div>
                 {/* Заголовок курса */}
-                <Link to={`/courses/${id}`} className="course-title-link">
-                    <h3 className="course-title">{title}</h3>
+                <Link to={`/courses/${id}`}>
+                    <h3>{title}</h3>
                 </Link>
 
                 {/* Краткое описание */}
-                <p className="course-description">
+                <p>
                     {description.length > 100
                         ? `${description.substring(0, 100)}...`
                         : description}
@@ -145,23 +113,22 @@ const CourseCard: React.FC<CourseCardProps> = ({
 
                 {/* Теги курса */}
                 {/* {tags.length > 0 && (
-                    <div className="course-tags">
+                    <div >
                         {tags.slice(0, 3).map((tag: any, index: any) => (
-                            <span key={index} className="tag">
+                            <span key={index}>
                                 {tag}
                             </span>
                         ))}
                         {tags.length > 3 && (
-                            <span className="tag more">+{tags.length - 3}</span>
+                            <span>+{tags.length - 3}</span>
                         )}
                     </div>
                 )} */}
 
                 {/* Уровень сложности */}
                 {difficulty_level && (
-                    <div className="course-level">
+                    <div>
                         <span
-                            className="level-badge"
                             style={{
                                 backgroundColor:
                                     getLevelColor(difficulty_level),
@@ -169,7 +136,7 @@ const CourseCard: React.FC<CourseCardProps> = ({
                         >
                             {difficulty_level}
                         </span>
-                        {/* <span className="completion-rate">
+                        {/* <span>
                             {completionRate
                                 ? `Завершили: ${completionRate}%`
                                 : 'Новый курс'}
@@ -179,13 +146,11 @@ const CourseCard: React.FC<CourseCardProps> = ({
 
                 {/* Рейтинг и отзывы */}
                 {popularity !== undefined && (
-                    <div className="course-rating">
+                    <div>
                         {renderStars(popularity)}
-                        <span className="rating-value">
-                            {popularity.toFixed(1)}
-                        </span>
+                        <span>{popularity.toFixed(1)}</span>
                         {/* {reviewsCount !== undefined && (
-                            <span className="reviews-count">
+                            <span>
                                 ({reviewsCount.toLocaleString()})
                             </span>
                         )} */}
@@ -193,18 +158,15 @@ const CourseCard: React.FC<CourseCardProps> = ({
                 )}
 
                 {/* Информация о цене и действиях */}
-                <div className="course-footer">
-                    <div className="price-info">
-                        <span className="price">{formatPrice(price)}</span>
+                <div>
+                    <div>
+                        <span>{formatPrice(price)}</span>
                         {price && price > 0 && (
-                            <span className="old-price">
-                                {formatPrice(price! * 1.5)}
-                            </span>
+                            <span>{formatPrice(price! * 1.5)}</span>
                         )}
                     </div>
-                    <div className="course-actions">
+                    <div>
                         <button
-                            className="favorite-btn"
                             onClick={(e) => {
                                 e.preventDefault()
                                 e.stopPropagation()
@@ -214,21 +176,19 @@ const CourseCard: React.FC<CourseCardProps> = ({
                         >
                             ♡
                         </button>
-                        <Link to={`/courses/${id}`} className="details-btn">
-                            Подробнее
-                        </Link>
+                        <Link to={`/courses/${id}`}>Подробнее</Link>
                     </div>
                 </div>
 
                 {/* Дополнительная информация */}
-                <div className="course-meta">
+                <div>
                     {updated_at && (
-                        <span className="meta-item">
+                        <span>
                             📅 Обновлен:{' '}
                             {new Date(updated_at).toLocaleDateString('ru-RU')}
                         </span>
                     )}
-                    <span className="meta-item">
+                    <span>
                         📊 Практических заданий: {course.duration_hours || 12}
                     </span>
                 </div>

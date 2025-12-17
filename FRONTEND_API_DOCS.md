@@ -504,10 +504,12 @@ const data = await response.json();
 ```
 
 **Валидация:**
+
 - `rating` - обязательное поле, целое число от 1 до 5
 - `comment` - опциональное текстовое поле
 
 **Ограничения:**
+
 - Один пользователь может оставить только один отзыв на курс
 
 ### 3.3. Обновить отзыв (Требуется аутентификация)
@@ -780,7 +782,9 @@ localStorage.setItem("access_token", access);
 localStorage.setItem("refresh_token", refresh);
 
 // 2. Получить категории курсов
-const categoriesResponse = await fetch("http://localhost:8003/courses/categories/");
+const categoriesResponse = await fetch(
+  "http://localhost:8003/courses/categories/"
+);
 const { categories } = await categoriesResponse.json();
 
 // 3. Получить список курсов с фильтрацией
@@ -1131,11 +1135,11 @@ export function useCourses(filters = {}) {
 }
 
 // Пример использования:
-// const { courses, categories, loading } = useCourses({ 
-//   search: 'python', 
+// const { courses, categories, loading } = useCourses({
+//   search: 'python',
 //   categories: 'Programming,Data Science',
 //   difficulty: 'Beginner',
-//   sort_by: '-popularity' 
+//   sort_by: '-popularity'
 // });
 ```
 

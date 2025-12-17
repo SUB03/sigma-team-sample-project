@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import type { UserSignUpData } from '../types/auth'
+import type { UserSignUpData } from '../types/authData'
 import { useSignUpMutation } from '../mutations/authMutations'
 import { useAuthTokens } from '../hooks/useAuthTokens'
-import '../CSS/SignUp.css'
 
 export function SignUp() {
     const { saveAuthTokens } = useAuthTokens()
@@ -109,19 +108,17 @@ export function SignUp() {
     const passwordStrength = getPasswordStrength(formData.password)
 
     return (
-        <div className="signup-container">
-            <div className="signup-card">
-                <div className="signup-header">
-                    <h1 className="signup-title">Создайте аккаунт</h1>
-                    <p className="signup-subtitle">
-                        Присоединяйтесь к сообществу программистов
-                    </p>
+        <div>
+            <div>
+                <div>
+                    <h1>Создайте аккаунт</h1>
+                    <p>Присоединяйтесь к сообществу программистов</p>
                 </div>
 
                 {registerMutation.error && (
-                    <div className="error-message">
-                        <div className="error-icon">⚠️</div>
-                        <div className="error-content">
+                    <div>
+                        <div>⚠️</div>
+                        <div>
                             <h3>Ошибка регистрации</h3>
                             <p>
                                 {registerMutation.error?.message ||
@@ -131,13 +128,13 @@ export function SignUp() {
                     </div>
                 )}
 
-                <form onSubmit={handleSubmit} className="signup-form">
-                    <div className="form-group">
-                        <label htmlFor="username" className="form-label">
-                            <span className="label-icon">👤</span>
+                <form onSubmit={handleSubmit}>
+                    <div>
+                        <label htmlFor="username">
+                            <span>👤</span>
                             Имя пользователя
                         </label>
-                        <div className="input-container">
+                        <div>
                             <input
                                 id="username"
                                 name="username"
@@ -147,21 +144,18 @@ export function SignUp() {
                                 placeholder="Sigma"
                                 disabled={registerMutation.isPending}
                                 required
-                                className="form-input"
                             />
-                            <div className="input-icon">👤</div>
+                            <div>👤</div>
                         </div>
-                        <div className="input-hint">
-                            Минимум 3 символа, только буквы и цифры
-                        </div>
+                        <div>Минимум 3 символа, только буквы и цифры</div>
                     </div>
 
-                    <div className="form-group">
-                        <label htmlFor="email" className="form-label">
-                            <span className="label-icon">📧</span>
+                    <div>
+                        <label htmlFor="email">
+                            <span>📧</span>
                             Email адрес
                         </label>
-                        <div className="input-container">
+                        <div>
                             <input
                                 id="email"
                                 name="email"
@@ -171,21 +165,18 @@ export function SignUp() {
                                 placeholder="sigma@gmail.com"
                                 disabled={registerMutation.isPending}
                                 required
-                                className="form-input"
                             />
-                            <div className="input-icon">📧</div>
+                            <div>📧</div>
                         </div>
-                        <div className="input-hint">
-                            Мы отправим подтверждение на этот адрес
-                        </div>
+                        <div>Мы отправим подтверждение на этот адрес</div>
                     </div>
 
-                    <div className="form-group">
-                        <label htmlFor="password" className="form-label">
-                            <span className="label-icon">🔒</span>
+                    <div>
+                        <label htmlFor="password">
+                            <span>🔒</span>
                             Пароль
                         </label>
-                        <div className="input-container">
+                        <div>
                             <input
                                 id="password"
                                 name="password"
@@ -195,12 +186,10 @@ export function SignUp() {
                                 placeholder="Не менее 8 символов"
                                 disabled={registerMutation.isPending}
                                 required
-                                className="form-input"
                             />
-                            <div className="input-icon">🔒</div>
+                            <div>🔒</div>
                             <button
                                 type="button"
-                                className="password-toggle"
                                 onClick={() => setShowPassword(!showPassword)}
                             >
                                 {showPassword ? '👁️' : '👁️‍🗨️'}
@@ -209,83 +198,33 @@ export function SignUp() {
 
                         {/* Индикатор силы пароля */}
                         {formData.password && (
-                            <div className="password-strength">
-                                <div className="strength-bars">
+                            <div>
+                                <div>
                                     {[1, 2, 3, 4, 5].map((i) => (
-                                        <div
-                                            key={i}
-                                            className={`strength-bar ${
-                                                i <= passwordStrength.score
-                                                    ? 'active'
-                                                    : ''
-                                            }`}
-                                            style={{
-                                                backgroundColor:
-                                                    i <= passwordStrength.score
-                                                        ? passwordStrength.color
-                                                        : '#e0e0e0',
-                                            }}
-                                        />
+                                        <div key={i} />
                                     ))}
                                 </div>
-                                <span
-                                    className="strength-label"
-                                    style={{ color: passwordStrength.color }}
-                                >
-                                    {passwordStrength.label}
-                                </span>
+                                <span>{passwordStrength.label}</span>
                             </div>
                         )}
 
-                        <div className="password-requirements">
+                        <div>
                             <h4>Требования к паролю:</h4>
                             <ul>
-                                <li
-                                    className={
-                                        formData.password.length >= 8
-                                            ? 'met'
-                                            : ''
-                                    }
-                                >
-                                    Минимум 8 символов
-                                </li>
-                                <li
-                                    className={
-                                        /[a-z]/.test(formData.password)
-                                            ? 'met'
-                                            : ''
-                                    }
-                                >
-                                    Строчные буквы
-                                </li>
-                                <li
-                                    className={
-                                        /[A-Z]/.test(formData.password)
-                                            ? 'met'
-                                            : ''
-                                    }
-                                >
-                                    Заглавные буквы
-                                </li>
-                                <li
-                                    className={
-                                        /\d/.test(formData.password)
-                                            ? 'met'
-                                            : ''
-                                    }
-                                >
-                                    Цифры
-                                </li>
+                                <li>Минимум 8 символов</li>
+                                <li>Строчные буквы</li>
+                                <li>Заглавные буквы</li>
+                                <li>Цифры</li>
                             </ul>
                         </div>
                     </div>
 
-                    <div className="form-group">
-                        <label htmlFor="confirmPassword" className="form-label">
-                            <span className="label-icon">🔐</span>
+                    <div>
+                        <label htmlFor="confirmPassword">
+                            <span>🔐</span>
                             Подтверждение пароля
                         </label>
-                        <div className="input-container">
+                        <div>
                             <input
                                 id="confirmPassword"
                                 name="confirmPassword"
@@ -297,20 +236,10 @@ export function SignUp() {
                                 placeholder="Повторите пароль"
                                 disabled={registerMutation.isPending}
                                 required
-                                className={`form-input ${
-                                    confirmPassword &&
-                                    formData.password !== confirmPassword
-                                        ? 'error'
-                                        : confirmPassword &&
-                                          formData.password === confirmPassword
-                                        ? 'success'
-                                        : ''
-                                }`}
                             />
-                            <div className="input-icon">🔐</div>
+                            <div>🔐</div>
                             <button
                                 type="button"
-                                className="password-toggle"
                                 onClick={() =>
                                     setShowConfirmPassword(!showConfirmPassword)
                                 }
@@ -320,20 +249,16 @@ export function SignUp() {
                         </div>
                         {confirmPassword &&
                             formData.password !== confirmPassword && (
-                                <div className="error-text">
-                                    Пароли не совпадают
-                                </div>
+                                <div>Пароли не совпадают</div>
                             )}
                         {confirmPassword &&
                             formData.password === confirmPassword && (
-                                <div className="success-text">
-                                    ✓ Пароли совпадают
-                                </div>
+                                <div>✓ Пароли совпадают</div>
                             )}
                     </div>
 
-                    <div className="form-group checkbox-group">
-                        <label className="checkbox-label">
+                    <div>
+                        <label>
                             <input
                                 type="checkbox"
                                 checked={termsAccepted}
@@ -341,16 +266,12 @@ export function SignUp() {
                                     setTermsAccepted(e.target.checked)
                                 }
                                 disabled={registerMutation.isPending}
-                                className="checkbox-input"
                             />
-                            <span className="custom-checkbox"></span>
-                            <span className="checkbox-text">
+                            <span></span>
+                            <span>
                                 Я соглашаюсь с{' '}
-                                <a href="/terms" className="terms-link">
-                                    условиями использования
-                                </a>{' '}
-                                и{' '}
-                                <a href="/privacy" className="terms-link">
+                                <a href="/terms">условиями использования</a> и{' '}
+                                <a href="/privacy">
                                     политикой конфиденциальности
                                 </a>
                             </span>
@@ -360,13 +281,10 @@ export function SignUp() {
                     <button
                         type="submit"
                         disabled={registerMutation.isPending || !termsAccepted}
-                        className={`submit-button ${
-                            registerMutation.isPending ? 'loading' : ''
-                        }`}
                     >
                         {registerMutation.isPending ? (
                             <>
-                                <span className="spinner"></span>
+                                <span></span>
                                 Регистрация...
                             </>
                         ) : (
@@ -375,29 +293,20 @@ export function SignUp() {
                     </button>
                 </form>
 
-                <div className="signup-footer">
-                    <p className="login-link">
-                        Уже есть аккаунт?{' '}
-                        <Link to="/sign_in" className="login-link-text">
-                            Войти
-                        </Link>
+                <div>
+                    <p>
+                        Уже есть аккаунт? <Link to="/sign_in">Войти</Link>
                     </p>
 
-                    <div className="social-signup">
-                        <p className="social-title">Или войти через:</p>
-                        <div className="social-buttons">
-                            <button
-                                type="button"
-                                className="social-button google"
-                            >
-                                <span className="social-icon">G</span>
+                    <div>
+                        <p>Или войти через:</p>
+                        <div>
+                            <button type="button">
+                                <span>G</span>
                                 Google
                             </button>
-                            <button
-                                type="button"
-                                className="social-button github"
-                            >
-                                <span className="social-icon">🐙</span>
+                            <button type="button">
+                                <span>🐙</span>
                                 GitHub
                             </button>
                         </div>

@@ -1,6 +1,5 @@
 // components/Pagination.tsx
-import React, { useState, useEffect } from 'react'
-import '../CSS/Pagination.css'
+import { useState, useEffect } from 'react'
 
 interface PaginationProps {
     currentPage: number
@@ -9,18 +8,16 @@ interface PaginationProps {
     maxVisiblePages?: number
     showFirstLast?: boolean
     showPrevNext?: boolean
-    className?: string
 }
 
-const Pagination: React.FC<PaginationProps> = ({
+function Pagination({
     currentPage,
     totalPages,
     onPageChange,
     maxVisiblePages = 5,
     showFirstLast = true,
     showPrevNext = true,
-    className = '',
-}) => {
+}: PaginationProps) {
     const [pages, setPages] = useState<number[]>([])
 
     // Генерация списка страниц для отображения
@@ -67,72 +64,59 @@ const Pagination: React.FC<PaginationProps> = ({
     if (totalPages <= 1) return null
 
     return (
-        <div className={`pagination-container ${className}`}>
-            <nav className="pagination" aria-label="Навигация по страницам">
-                <ul className="pagination-list">
+        <div>
+            <nav aria-label="Навигация по страницам">
+                <ul>
                     {/* Первая страница */}
                     {showFirstLast &&
                         totalPages > maxVisiblePages &&
                         currentPage > 1 && (
-                            <li className="pagination-item">
+                            <li>
                                 <button
                                     onClick={handleFirstClick}
-                                    className="pagination-button first"
                                     aria-label="Первая страница"
                                     disabled={currentPage === 1}
                                 >
                                     <svg
-                                        className="pagination-icon"
                                         viewBox="0 0 24 24"
                                         width="16"
                                         height="16"
                                     >
                                         <path d="M18.41 16.59L13.82 12l4.59-4.59L17 6l-6 6 6 6zM6 6h2v12H6z" />
                                     </svg>
-                                    <span className="pagination-text">
-                                        Первая
-                                    </span>
+                                    <span>Первая</span>
                                 </button>
                             </li>
                         )}
 
                     {/* Предыдущая страница */}
                     {showPrevNext && (
-                        <li className="pagination-item">
+                        <li>
                             <button
                                 onClick={handlePrevClick}
-                                className="pagination-button prev"
                                 aria-label="Предыдущая страница"
                                 disabled={currentPage === 1}
                             >
-                                <svg
-                                    className="pagination-icon"
-                                    viewBox="0 0 24 24"
-                                    width="16"
-                                    height="16"
-                                >
+                                <svg viewBox="0 0 24 24" width="16" height="16">
                                     <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z" />
                                 </svg>
-                                <span className="pagination-text">Назад</span>
+                                <span>Назад</span>
                             </button>
                         </li>
                     )}
 
                     {/* Многоточие в начале */}
                     {pages[0] > 1 && (
-                        <li className="pagination-item">
-                            <span className="pagination-ellipsis">...</span>
+                        <li>
+                            <span>...</span>
                         </li>
                     )}
 
                     {/* Номера страниц */}
                     {pages.map((page) => (
-                        <li key={page} className="pagination-item">
+                        <li key={page}>
                             <button
                                 onClick={() => handlePageClick(page)}
-                                className={`pagination-button ${
-                                    page === currentPage ? 'active' : ''
-                                }`}
                                 aria-label={`Страница ${page}`}
                                 aria-current={
                                     page === currentPage ? 'page' : undefined
@@ -145,27 +129,21 @@ const Pagination: React.FC<PaginationProps> = ({
 
                     {/* Многоточие в конце */}
                     {pages[pages.length - 1] < totalPages && (
-                        <li className="pagination-item">
-                            <span className="pagination-ellipsis">...</span>
+                        <li>
+                            <span>...</span>
                         </li>
                     )}
 
                     {/* Следующая страница */}
                     {showPrevNext && (
-                        <li className="pagination-item">
+                        <li>
                             <button
                                 onClick={handleNextClick}
-                                className="pagination-button next"
                                 aria-label="Следующая страница"
                                 disabled={currentPage === totalPages}
                             >
-                                <span className="pagination-text">Далее</span>
-                                <svg
-                                    className="pagination-icon"
-                                    viewBox="0 0 24 24"
-                                    width="16"
-                                    height="16"
-                                >
+                                <span>Далее</span>
+                                <svg viewBox="0 0 24 24" width="16" height="16">
                                     <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z" />
                                 </svg>
                             </button>
@@ -176,18 +154,14 @@ const Pagination: React.FC<PaginationProps> = ({
                     {showFirstLast &&
                         totalPages > maxVisiblePages &&
                         currentPage < totalPages && (
-                            <li className="pagination-item">
+                            <li>
                                 <button
                                     onClick={handleLastClick}
-                                    className="pagination-button last"
                                     aria-label="Последняя страница"
                                     disabled={currentPage === totalPages}
                                 >
-                                    <span className="pagination-text">
-                                        Последняя
-                                    </span>
+                                    <span>Последняя</span>
                                     <svg
-                                        className="pagination-icon"
                                         viewBox="0 0 24 24"
                                         width="16"
                                         height="16"
@@ -200,22 +174,19 @@ const Pagination: React.FC<PaginationProps> = ({
                 </ul>
 
                 {/* Показ информации о текущей странице */}
-                <div className="pagination-info">
-                    <span className="current-info">
+                <div>
+                    <span>
                         Страница <strong>{currentPage}</strong> из{' '}
                         <strong>{totalPages}</strong>
                     </span>
-                    <div className="pagination-go-to">
-                        <label htmlFor="page-input" className="go-to-label">
-                            Перейти:
-                        </label>
+                    <div>
+                        <label htmlFor="page-input">Перейти:</label>
                         <input
                             id="page-input"
                             type="number"
                             min="1"
                             max={totalPages}
                             defaultValue={currentPage}
-                            className="go-to-input"
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
                                     const page = parseInt(
@@ -228,7 +199,6 @@ const Pagination: React.FC<PaginationProps> = ({
                             }}
                         />
                         <button
-                            className="go-to-button"
                             onClick={() => {
                                 const input = document.getElementById(
                                     'page-input'

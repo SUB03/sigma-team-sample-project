@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { getProfileQuery } from '../hooks/getProfileQuery'
+import { getProfileQuery } from '../hooks/useProfileQuery'
 
 export const UserProfile = () => {
     const respose = getProfileQuery()

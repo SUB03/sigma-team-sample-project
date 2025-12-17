@@ -3,7 +3,7 @@ import type {
     UserSignUpData,
     UserSignInData,
     AuthResponse,
-} from '../types/auth'
+} from '../types/authData'
 import { $api } from '../api'
 import type { AxiosError, AxiosResponse } from 'axios'
 

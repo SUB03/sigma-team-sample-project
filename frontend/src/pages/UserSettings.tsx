@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-import { getProfileQuery } from '../hooks/getProfileQuery'
+import { getProfileQuery } from '../hooks/useProfileQuery'
 import { useProfileChangeMutation } from '../mutations/useProfileChangeMutation'
 import { useQueryClient } from '@tanstack/react-query'
 

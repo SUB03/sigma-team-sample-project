@@ -1,7 +1,7 @@
 import { useSearchParams } from 'react-router-dom'
 import { course_url } from '../api'
 import CourseCard from '../components/CourseCard'
-import { getCoursesQuery } from '../hooks/getCourses'
+import { getCoursesQuery } from '../hooks/useCourses'
 
 export function Search() {
     const [searchParams] = useSearchParams()

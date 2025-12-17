@@ -1,6 +1,4 @@
-import '../CSS/Home.css'
 import { Link } from 'react-router-dom'
-import Button from '../components/Button'
 import { useCookies } from 'react-cookie'
 import { useLogout } from '../mutations/logoutMutation'
 import { useState } from 'react'
@@ -11,8 +9,8 @@ import Pagination from '../components/Pagination' // Предполагаемы�
 import {
     getCoursesQuery,
     getPopularCoursesQuery,
-} from '../hooks/getCourses.tsx'
-import { getCategories } from '../hooks/getCategories.tsx'
+} from '../hooks/useCourses.tsx'
+import { getCategories } from '../hooks/useCategories.tsx'
 
 export function Home() {
     const [cookie, , removeCookie] = useCookies([
@@ -79,15 +77,15 @@ export function Home() {
     //#region  HTML
     return (
         <>
-            <div className="header-section">
+            <div>
                 <Link to={destination}>
-                    <Button
+                    <button
                         onClick={() =>
                             console.log(`redirected to ${destination}`)
                         }
                     >
                         {user_button}
-                    </Button>
+                    </button>
                 </Link>
                 <form onSubmit={handleLogout}>
                     {logged_in && (
@@ -104,9 +102,9 @@ export function Home() {
             </div>
 
             {/* Hero секция с поиском */}
-            <section className="hero">
+            <section>
                 <h1>Изучайте программирование с нуля</h1>
-                <div className="search-bar">
+                <div>
                     <input
                         type="text"
                         placeholder="Поиск курсов по языкам, технологиям..."
@@ -120,17 +118,12 @@ export function Home() {
             </section>
 
             {/* Категории курсов  */}
-            <section className="categories">
+            <section>
                 <h2>Категории</h2>
-                <div className="category-list">
+                <div>
                     {categories?.data.categories.map((category) => (
                         <button
                             key={category}
-                            className={`category-btn${
-                                selectedCategory.includes(category)
-                                    ? ' selected'
-                                    : ''
-                            }`}
                             onClick={() => handleCategoryChange(category)}
                         >
                             {category}
@@ -140,12 +133,12 @@ export function Home() {
             </section>
 
             {/* Популярные курсы */}
-            <section className="popular-courses">
+            <section>
                 <h2>🔥 Самые популярные курсы</h2>
                 {isPopularLoading ? (
-                    <div className="loading">Загрузка популярных курсов...</div>
+                    <div>Загрузка популярных курсов...</div>
                 ) : popularCourses?.data.courses.length ? (
-                    <div className="courses-grid">
+                    <div>
                         {popularCourses.data.courses.map((course) => (
                             <CourseCard
                                 key={course.id}
@@ -155,12 +148,12 @@ export function Home() {
                         ))}
                     </div>
                 ) : (
-                    <div className="no-courses">Нет популярных курсов</div>
+                    <div>Нет популярных курсов</div>
                 )}
             </section>
 
             {/* Фильтры */}
-            <section className="filters">
+            <section>
                 <select>
                     <option value="">Все языки</option>
                     <option value="javascript">JavaScript</option>
@@ -173,17 +166,17 @@ export function Home() {
                     <option value="intermediate">Средний</option>
                     <option value="advanced">Продвинутый</option>
                 </select>
-                <button className="filter-btn">Применить фильтры</button>
+                <button>Применить фильтры</button>
             </section>
 
             {/* Все курсы */}
-            <section className="all-courses">
+            <section>
                 <h2>Все курсы по программированию</h2>
                 {isAllCoursesLoading ? (
-                    <div className="loading">Загрузка курсов...</div>
+                    <div>Загрузка курсов...</div>
                 ) : allCourses?.data.courses.length ? (
                     <>
-                        <div className="courses-grid">
+                        <div>
                             {allCourses.data.courses.map((course) => (
                                 <CourseCard key={course.id} course={course} />
                             ))}
@@ -195,27 +188,27 @@ export function Home() {
                         />
                     </>
                 ) : (
-                    <div className="no-courses">Курсы не найдены</div>
+                    <div>Курсы не найдены</div>
                 )}
             </section>
 
             {/* Дополнительные секции */}
-            <section className="features">
+            <section>
                 <h2>Почему выбирают нас?</h2>
-                <div className="features-grid">
-                    <div className="feature">
+                <div>
+                    <div>
                         <h3>🎯 Практика</h3>
                         <p>Реальные проекты в каждом курсе</p>
                     </div>
-                    <div className="feature">
+                    <div>
                         <h3>👨‍🏫 Наставники</h3>
                         <p>Поддержка опытных разработчиков</p>
                     </div>
-                    <div className="feature">
+                    <div>
                         <h3>📱 Доступность</h3>
                         <p>Учитесь с любого устройства</p>
                     </div>
-                    <div className="feature">
+                    <div>
                         <h3>💼 Карьера</h3>
                         <p>Помощь с трудоустройством</p>
                     </div>
