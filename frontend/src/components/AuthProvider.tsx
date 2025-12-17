@@ -18,9 +18,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             try {
                 const response = await getTokens.mutateAsync(refresh)
                 saveAuthTokens(response.data.access, response.data.refresh)
-            } catch {
-                removeCookie('access_token')
-                removeCookie('refresh_token')
+            } catch (err) {
+                console.error(err)
             }
         }
 

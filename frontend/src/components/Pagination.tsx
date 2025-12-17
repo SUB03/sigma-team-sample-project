@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 interface PaginationProps {
     currentPage: number
     totalPages: number
-    onPageChange: (page: number) => void
+    onPageChange?: (page: number) => void
     maxVisiblePages?: number
     showFirstLast?: boolean
     showPrevNext?: boolean
@@ -52,7 +52,7 @@ function Pagination({
     // Обработчики кликов
     const handlePageClick = (page: number) => {
         if (page !== currentPage && page >= 1 && page <= totalPages) {
-            onPageChange(page)
+            onPageChange && onPageChange(page)
         }
     }
 
@@ -77,13 +77,6 @@ function Pagination({
                                     aria-label="Первая страница"
                                     disabled={currentPage === 1}
                                 >
-                                    <svg
-                                        viewBox="0 0 24 24"
-                                        width="16"
-                                        height="16"
-                                    >
-                                        <path d="M18.41 16.59L13.82 12l4.59-4.59L17 6l-6 6 6 6zM6 6h2v12H6z" />
-                                    </svg>
                                     <span>Первая</span>
                                 </button>
                             </li>
@@ -97,9 +90,6 @@ function Pagination({
                                 aria-label="Предыдущая страница"
                                 disabled={currentPage === 1}
                             >
-                                <svg viewBox="0 0 24 24" width="16" height="16">
-                                    <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z" />
-                                </svg>
                                 <span>Назад</span>
                             </button>
                         </li>
@@ -143,9 +133,6 @@ function Pagination({
                                 disabled={currentPage === totalPages}
                             >
                                 <span>Далее</span>
-                                <svg viewBox="0 0 24 24" width="16" height="16">
-                                    <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z" />
-                                </svg>
                             </button>
                         </li>
                     )}
@@ -161,13 +148,6 @@ function Pagination({
                                     disabled={currentPage === totalPages}
                                 >
                                     <span>Последняя</span>
-                                    <svg
-                                        viewBox="0 0 24 24"
-                                        width="16"
-                                        height="16"
-                                    >
-                                        <path d="M5.59 7.41L10.18 12l-4.59 4.59L7 18l6-6-6-6zM18 6h2v12h-2z" />
-                                    </svg>
                                 </button>
                             </li>
                         )}

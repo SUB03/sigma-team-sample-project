@@ -16,11 +16,10 @@ export const UserProfile = () => {
             <image>{respose.data?.data.photo}</image>
             <br />
             <Link to="/user/settings">
-                <button
-                    onClick={() => console.log(`redirected to /user/profile`)}
-                >
-                    Profile Settings
-                </button>
+                <button>Profile Settings</button>
+            </Link>
+            <Link to="/user/purchases">
+                <button>My Purchases</button>
             </Link>
         </>
     )

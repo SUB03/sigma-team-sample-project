@@ -35,5 +35,8 @@ export interface review {
 }
 export interface CourseReviews {
     count: number
-    reviews: review[]
+    total_pages: number
+    current_page: number
+    page_size: number
+    results: review[]
 }
