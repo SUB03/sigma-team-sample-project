@@ -15,6 +15,7 @@ import { AuthProvider } from './components/AuthProvider'
 import { Search } from './pages/Search'
 import { CoursePage } from './pages/CoursePage'
 import { UserPurchasesPage } from './pages/UserPurchasesPage'
+import { UserLayout } from './pages/UserLayout'
 
 const queryClient = new QueryClient()
 
@@ -35,7 +36,8 @@ function App() {
 
                             {/* if user is unauthentificated they cannot access these */}
                             <Route element={<ProtectedRoute />}>
-                                <Route path="/user" element={<UserProfile />}>
+                                <Route path="/user" element={<UserLayout />}>
+                                    <Route index element={<UserProfile />} />
                                     <Route
                                         path="purchases"
                                         element={<UserPurchasesPage />}
