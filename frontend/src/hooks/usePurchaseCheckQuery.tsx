@@ -7,7 +7,10 @@ export interface PurchaseCheckResponse {
     has_purchased: boolean
 }
 
-export const usePurchaseCheckQuery = (course_id: number) => {
+export const usePurchaseCheckQuery = (
+    course_id: number,
+    isAuthenticated: boolean
+) => {
     return useQuery({
         queryKey: ['Purchased', course_id],
         queryFn: async () => {
@@ -15,7 +18,7 @@ export const usePurchaseCheckQuery = (course_id: number) => {
                 `${purchase_url}/purchase/check/${course_id}/`
             )
         },
-        retry: 1,
         staleTime: 5 * 60 * 1000, // данные считаются свежими 5 минут
+        enabled: isAuthenticated,
     })
 }

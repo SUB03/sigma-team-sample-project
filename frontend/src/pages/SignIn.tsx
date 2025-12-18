@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import type { UserSignInData } from '../types/authData'
 import { useSignInMutation } from '../mutations/authMutations'
 import { useAuthTokens } from '../hooks/useAuthTokens'
+import { useAuth } from '../contexts/AuthContext'
 
 export const SignIn = () => {
     const [formData, setFormData] = useState<UserSignInData>({
@@ -12,6 +13,7 @@ export const SignIn = () => {
 
     const authorizationMutation = useSignInMutation()
     const { saveAuthTokens } = useAuthTokens()
+    const { login } = useAuth()
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target
@@ -26,7 +28,7 @@ export const SignIn = () => {
 
         try {
             const response = await authorizationMutation.mutateAsync(formData)
-            console.log(response)
+            login()
             saveAuthTokens(response.data.access, response.data.refresh)
         } catch (error) {
             console.error('Registration failed:', error)

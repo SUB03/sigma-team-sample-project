@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useCookies } from 'react-cookie'
-import { useLogout } from '../mutations/logoutMutation'
+import { useLogoutMutation } from '../mutations/useLogoutMutation.tsx'
 import { useState } from 'react'
 
 import CourseCard from '../components/CourseCard' // Предполагаемый компонент
@@ -11,6 +11,7 @@ import {
     getPopularCoursesQuery,
 } from '../hooks/useCourses.tsx'
 import { getCategories } from '../hooks/useCategories.tsx'
+import { useAuth } from '../contexts/AuthContext.tsx'
 
 export function Home() {
     const [cookie, , removeCookie] = useCookies([
@@ -19,6 +20,7 @@ export function Home() {
     ])
     const [searchQuery, setSearchQuery] = useState('')
     const [selectedCategory, setSelectedCategory] = useState<string[]>([])
+    const { logout } = useAuth()
 
     const { data: popularCourses, isLoading: isPopularLoading } =
         getPopularCoursesQuery()
@@ -41,7 +43,7 @@ export function Home() {
             : ''
     }`
     console.log(`finalSearchQuery: ${finalSearchQuery}`)
-    const logoutMutation = useLogout()
+    const logoutMutation = useLogoutMutation()
 
     const handleSearchInputChange = (
         e: React.ChangeEvent<HTMLInputElement>
@@ -52,11 +54,10 @@ export function Home() {
     const handleLogout = async (e: React.FormEvent) => {
         e.preventDefault()
         try {
-            const status = await logoutMutation.mutateAsync()
-            if (status === 205) {
-                removeCookie('access_token', { path: '/' })
-                removeCookie('refresh_token', { path: '/' })
-            }
+            await logoutMutation.mutateAsync()
+            removeCookie('access_token', { path: '/' })
+            removeCookie('refresh_token', { path: '/' })
+            logout()
         } catch (err) {
             console.error('Logout failed:', err)
         }

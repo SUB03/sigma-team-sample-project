@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import type { UserSignUpData } from '../types/authData'
 import { useSignUpMutation } from '../mutations/authMutations'
 import { useAuthTokens } from '../hooks/useAuthTokens'
+import { useAuth } from '../contexts/AuthContext'
 
 export function SignUp() {
     const { saveAuthTokens } = useAuthTokens()
@@ -16,6 +17,7 @@ export function SignUp() {
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
     const [termsAccepted, setTermsAccepted] = useState(false)
+    const { login } = useAuth()
 
     const registerMutation = useSignUpMutation()
 
@@ -74,6 +76,7 @@ export function SignUp() {
 
         try {
             const response = await registerMutation.mutateAsync(formData)
+            login()
             saveAuthTokens(response.data.access, response.data.refresh)
             navigate('/user', { replace: true })
         } catch (error) {

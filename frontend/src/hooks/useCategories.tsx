@@ -20,7 +20,6 @@ export const getCategories = () => {
                 }
             )
         },
-        retry: 1,
         staleTime: 5 * 60 * 1000, // данные считаются свежими 5 минут
     })
 }

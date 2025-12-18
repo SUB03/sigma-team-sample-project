@@ -1,15 +1,11 @@
 import { type ReactNode } from 'react'
-import { useCookies } from 'react-cookie'
 import { Navigate, Outlet } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
 
 const PublicRoute = (): ReactNode => {
-    const [cookies] = useCookies(['access_token'])
+    const { isAuthenticated } = useAuth()
 
-    return !cookies.access_token ? (
-        <Outlet />
-    ) : (
-        <Navigate to="/" replace={false} />
-    )
+    return !isAuthenticated ? <Outlet /> : <Navigate to="/" replace={false} />
 }
 
 export default PublicRoute

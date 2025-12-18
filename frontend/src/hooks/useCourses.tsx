@@ -40,7 +40,6 @@ export const getPopularCoursesQuery = () => {
                 }
             )
         },
-        retry: true,
         retryDelay: retryDelay,
         staleTime: staleTime,
     })
@@ -60,7 +59,6 @@ export const getCoursesQuery = (queryData?: CourseQueryData) => {
                 }
             )
         },
-        retry: true,
         retryDelay: retryDelay,
         staleTime: staleTime,
     })
@@ -77,7 +75,6 @@ export const getCourseQuery = (course_id: number) => {
                 skipAuth: true,
             })
         },
-        retry: true,
         retryDelay: retryDelay,
         staleTime: staleTime,
     })
@@ -97,13 +94,12 @@ export const getReviewsQuery = (course_id: number, page: number) => {
                 }
             )
         },
-        retry: true,
         retryDelay: retryDelay,
         staleTime: staleTime,
     })
 }
 
-export const useGetMyReview = (course_id: number) => {
+export const useGetMyReview = (course_id: number, isAuthenticated: boolean) => {
     return useQuery({
         queryKey: ['myReview', course_id],
         queryFn: async () => {
@@ -111,8 +107,8 @@ export const useGetMyReview = (course_id: number) => {
                 `${reviews_url}/reviews/my-reviews/${course_id}/`
             )
         },
-        retry: true,
         retryDelay: retryDelay,
         staleTime: staleTime,
+        enabled: isAuthenticated,
     })
 }
