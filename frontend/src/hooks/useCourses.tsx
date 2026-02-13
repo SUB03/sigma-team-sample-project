@@ -13,6 +13,16 @@ export interface CourseQueryData {
     url?: string
 }
 
+export interface ReviewQueryData {
+    id: number
+    course_id: number
+    user_id: number
+    rating: number
+    comment: string
+    created_at: string
+    updated_at: string
+}
+
 const retryDelay = 1 * 60 * 1000 // 1 minute
 const staleTime = 5 * 60 * 1000 // 5 minutes
 
@@ -30,7 +40,6 @@ export const getPopularCoursesQuery = () => {
                 }
             )
         },
-        retry: true,
         retryDelay: retryDelay,
         staleTime: staleTime,
     })
@@ -50,7 +59,6 @@ export const getCoursesQuery = (queryData?: CourseQueryData) => {
                 }
             )
         },
-        retry: true,
         retryDelay: retryDelay,
         staleTime: staleTime,
     })
@@ -67,18 +75,17 @@ export const getCourseQuery = (course_id: number) => {
                 skipAuth: true,
             })
         },
-        retry: true,
         retryDelay: retryDelay,
         staleTime: staleTime,
     })
 }
 
-export const getReviewsQuery = (course_id: number) => {
+export const getReviewsQuery = (course_id: number, page: number) => {
     return useQuery({
-        queryKey: ['reviews', course_id],
+        queryKey: ['reviews', course_id, page],
         queryFn: async () => {
             return $api.get<CourseReviews>(
-                `${reviews_url}/reviews/course/${course_id}/`,
+                `${reviews_url}/reviews/course/${course_id}/?page=${page}`,
                 {
                     headers: {
                         'Content-Type': 'application/json',
@@ -87,8 +94,21 @@ export const getReviewsQuery = (course_id: number) => {
                 }
             )
         },
-        retry: true,
         retryDelay: retryDelay,
         staleTime: staleTime,
+    })
+}
+
+export const useGetMyReview = (course_id: number, isAuthenticated: boolean) => {
+    return useQuery({
+        queryKey: ['myReview', course_id],
+        queryFn: async () => {
+            return $api.get<ReviewQueryData>(
+                `${reviews_url}/reviews/my-reviews/${course_id}/`
+            )
+        },
+        retryDelay: retryDelay,
+        staleTime: staleTime,
+        enabled: isAuthenticated,
     })
 }

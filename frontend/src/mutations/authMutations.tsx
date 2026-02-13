@@ -44,7 +44,16 @@ export const useSignInMutation = () => {
 export const getTokensMutation = () => {
     return useMutation({
         mutationFn: async (refresh: string) => {
-            return $api.post('/user/token/refresh/', { refresh: refresh })
+            return $api.post(
+                '/user/token/refresh/',
+                { refresh: refresh },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    skipAuth: true,
+                }
+            )
         },
         onSuccess: (data) => {
             console.log('authorization successful:', data)
@@ -54,5 +63,6 @@ export const getTokensMutation = () => {
             console.error('authorization error:', error)
             // Handle error (show error message, etc.)
         },
+        retry: 0,
     })
 }

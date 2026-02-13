@@ -1,10 +1,38 @@
+<<<<<<< HEAD
 import { useParams } from 'react-router-dom'
 import { getCourseQuery, getReviewsQuery } from '../hooks/useCourses'
 import { Header } from '../components/Header'
 import { Footer } from '../components/Footer'
+=======
+import z from 'zod'
+import { useNavigate, useParams } from 'react-router-dom'
+import {
+    getCourseQuery,
+    getReviewsQuery,
+    useGetMyReview,
+} from '../hooks/useCourses'
+import { usePurchaseMutation } from '../mutations/purchaseMutation'
+import { usePurchaseCheckQuery } from '../hooks/usePurchaseCheckQuery'
+import { useQueryClient } from '@tanstack/react-query'
+import Pagination from '../components/Pagination'
+import { useEffect, useState } from 'react'
+import {
+    useMyReviewsDeleteMutation,
+    useMyReviewsPostMutation,
+    useMyReviewsUpdateMutation,
+} from '../mutations/reviewsMutations'
+import { useAuth } from '../contexts/AuthContext'
+
+const commentSchema = z.object({
+    rating: z.string().transform((val) => parseInt(val, 10)),
+    comment: z.string(),
+})
+>>>>>>> 5dce28cffee02be356f0b62e36bdafa10a5303fd
 
 export function CoursePage() {
     const { id } = useParams<{ id: string }>()
+    const [editReview, setEditReview] = useState(false)
+    const [pagination, setPagination] = useState(1)
 
     if (!id) {
         return (
@@ -22,12 +50,22 @@ export function CoursePage() {
     }
 
     const courseId = parseInt(id, 10)
+<<<<<<< HEAD
     const { data: reviews, isLoading: reviewsLoading } = getReviewsQuery(courseId)
     const { data: course, isLoading: courseLoading } = getCourseQuery(courseId)
+=======
+    // useAuth()
+    const { isAuthenticated } = useAuth()
+>>>>>>> 5dce28cffee02be356f0b62e36bdafa10a5303fd
 
-    console.log(reviews)
-    console.log(course)
+    const navigate = useNavigate()
+    //const location = useLocation()
+    const purchaseMutation = usePurchaseMutation()
+    const useMyReviewsPost = useMyReviewsPostMutation()
+    const useMyReviewsUpdate = useMyReviewsUpdateMutation()
+    const useMyReviewsDelete = useMyReviewsDeleteMutation()
 
+<<<<<<< HEAD
     if (courseLoading || reviewsLoading) {
         return (
             <>
@@ -70,10 +108,77 @@ export function CoursePage() {
         'Beginner': 'success',
         'Intermediate': 'warning',
         'Advanced': 'danger'
+=======
+    const { data: purchaseCheckResponse, isLoading: purchaseCheckLoading } =
+        usePurchaseCheckQuery(courseId, isAuthenticated)
+    const { data: userReviewResponse } = useGetMyReview(
+        courseId,
+        isAuthenticated
+    )
+    const {
+        data: reviewsResponse,
+        isLoading: reviewsLoading,
+        refetch: refetchAllReviews,
+    } = getReviewsQuery(courseId, pagination)
+    const { data: courseResponse } = getCourseQuery(courseId)
+    const queryClient = useQueryClient()
+
+    async function SubmitCommentFormAction(form_data: FormData) {
+        console.log(form_data)
+        const commentForm = commentSchema.safeParse(
+            Object.fromEntries(form_data)
+        )
+        console.log(commentForm.data)
+
+        if (commentForm.success) {
+            try {
+                if (userReviewResponse) {
+                    console.log('userReview', userReviewResponse)
+                    await useMyReviewsUpdate.mutateAsync({
+                        review_id: userReviewResponse.data.id,
+                        ...commentForm.data,
+                    })
+                } else {
+                    await useMyReviewsPost.mutateAsync({
+                        course_id: courseId,
+                        ...commentForm.data,
+                    })
+                }
+            } catch (err) {
+                console.log(err)
+            }
+            setEditReview(false)
+        }
+    }
+
+    // when pagination changes refetch
+    useEffect(() => {
+        refetchAllReviews()
+    }, [pagination])
+
+    const handleDeleteComment = async (id: number) => {
+        try {
+            await useMyReviewsDelete.mutateAsync(id)
+            queryClient.invalidateQueries({ queryKey: ['reviews', courseId] })
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    const handlePageChange = (page: number) => {
+        console.log(page)
+        setPagination(page)
+    }
+
+    // TODO: if not isCouerseLoading then show 404 or error
+    if (!courseResponse) {
+        return <div>Loading...</div>
+>>>>>>> 5dce28cffee02be356f0b62e36bdafa10a5303fd
     }
 
     return (
         <>
+<<<<<<< HEAD
             <Header />
             <div className="min-vh-100" style={{
                 background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.02) 0%, rgba(118, 75, 162, 0.02) 100%)',
@@ -264,6 +369,116 @@ export function CoursePage() {
                 </div>
             </div>
             <Footer />
+=======
+            <div>
+                <h1>{courseResponse.data.title}</h1>
+                <p>{courseResponse.data.description}</p>
+                <p>Price: {courseResponse.data.price}</p>
+                <p>Popularity: {courseResponse.data.popularity}</p>
+            </div>
+
+            <div>
+                {purchaseCheckLoading ? (
+                    <div>Loading...</div>
+                ) : isAuthenticated &&
+                  purchaseCheckResponse &&
+                  purchaseCheckResponse.data.has_purchased ? (
+                    <button>Go to Course</button>
+                ) : (
+                    <button
+                        onClick={async () => {
+                            if (!isAuthenticated) {
+                                navigate('/sign_in')
+                            }
+                            try {
+                                const response =
+                                    await purchaseMutation.mutateAsync({
+                                        course_id: courseId,
+                                    })
+                                console.log(response)
+
+                                await queryClient.invalidateQueries({
+                                    queryKey: ['Purchased', courseId],
+                                })
+                            } catch (error) {
+                                console.error('Purchase failed:', error)
+                            }
+                        }}
+                    >
+                        Buy Now
+                    </button>
+                )}
+            </div>
+
+            <h2>Reviews</h2>
+            {!isAuthenticated ? (
+                <></>
+            ) : userReviewResponse && !editReview ? (
+                <>
+                    <h1>Your review</h1>
+                    <div>
+                        <p>Rating: {userReviewResponse.data.rating}</p>
+                        <p>{userReviewResponse.data.comment}</p>
+                    </div>
+                    <button onClick={() => setEditReview(true)}>Edit</button>
+                    <button
+                        onClick={() =>
+                            handleDeleteComment(userReviewResponse.data.id)
+                        }
+                    >
+                        Delete
+                    </button>
+                    <br />
+                </>
+            ) : (
+                <>
+                    <h1>Write your review</h1>
+                    <form action={SubmitCommentFormAction}>
+                        <label htmlFor="rating">Rating:</label>
+                        <input
+                            type="number"
+                            id="rating"
+                            name="rating"
+                            min="1"
+                            max="5"
+                            required
+                        />
+                        <br />
+                        <label htmlFor="comment">Comment:</label>
+                        <input
+                            type="text"
+                            id="comment"
+                            name="comment"
+                            required
+                        />
+                        <br />
+                        <button>Submit</button>
+                    </form>
+                </>
+            )}
+            {reviewsLoading ? (
+                <p>Loading...</p>
+            ) : !reviewsResponse ||
+              reviewsResponse.data.results.length === 0 ? (
+                <p>No reviews yet.</p>
+            ) : (
+                <>
+                    {reviewsResponse.data.results.map((review) => (
+                        <div key={review.id}>
+                            <p>Rating: {review.rating}</p>
+                            <p>{review.user_id}</p>
+                            <p>{review.comment}</p>
+                            <p>{review.created_at}</p>
+                        </div>
+                    ))}
+                    <Pagination
+                        currentPage={reviewsResponse.data.current_page}
+                        totalPages={reviewsResponse.data.total_pages}
+                        onPageChange={handlePageChange}
+                    />
+                </>
+            )}
+>>>>>>> 5dce28cffee02be356f0b62e36bdafa10a5303fd
         </>
     )
 }

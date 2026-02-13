@@ -3,8 +3,12 @@ import { Link, useNavigate } from 'react-router-dom'
 import type { UserSignUpData } from '../types/authData'
 import { useSignUpMutation } from '../mutations/authMutations'
 import { useAuthTokens } from '../hooks/useAuthTokens'
+<<<<<<< HEAD
 import { Header } from '../components/Header'
 import { Footer } from '../components/Footer'
+=======
+import { useAuth } from '../contexts/AuthContext'
+>>>>>>> 5dce28cffee02be356f0b62e36bdafa10a5303fd
 
 export function SignUp() {
     const { saveAuthTokens } = useAuthTokens()
@@ -16,7 +20,11 @@ export function SignUp() {
     })
     const [confirmPassword, setConfirmPassword] = useState('')
     const [termsAccepted, setTermsAccepted] = useState(false)
+<<<<<<< HEAD
     const [validationErrors, setValidationErrors] = useState<string[]>([])
+=======
+    const { login } = useAuth()
+>>>>>>> 5dce28cffee02be356f0b62e36bdafa10a5303fd
 
     const registerMutation = useSignUpMutation()
 
@@ -72,6 +80,7 @@ export function SignUp() {
 
         try {
             const response = await registerMutation.mutateAsync(formData)
+            login()
             saveAuthTokens(response.data.access, response.data.refresh)
             navigate('/user', { replace: true })
         } catch (error) {
