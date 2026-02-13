@@ -7,14 +7,14 @@ export const useAuthTokens = () => {
         console
         setCookie('access_token', access, {
             path: '/',
-            maxAge: 15 * 60, // 15 минут
+            maxAge: 15 * 60, // 15 minutes
             sameSite: 'strict',
             secure: import.meta.env.PROD,
         })
 
         setCookie('refresh_token', refresh, {
             path: '/',
-            maxAge: 30 * 24 * 60 * 60, // 30 дней
+            maxAge: 30 * 24 * 60 * 60, // 30 days
             sameSite: 'strict',
             secure: import.meta.env.PROD,
         })

@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom'
-import { useCookies } from 'react-cookie'
-import { useLogout } from '../mutations/logoutMutation'
 import { useState } from 'react'
 
-import CourseCard from '../components/CourseCard' // Предполагаемый компонент
-import Pagination from '../components/Pagination' // Предполагаемый компонент
+import CourseCard from '../components/CourseCard'
+import Pagination from '../components/Pagination'
+import { Header } from '../components/Header'
+import { Footer } from '../components/Footer'
 
 import {
     getCoursesQuery,
@@ -13,10 +13,6 @@ import {
 import { getCategories } from '../hooks/useCategories.tsx'
 
 export function Home() {
-    const [cookie, , removeCookie] = useCookies([
-        'access_token',
-        'refresh_token',
-    ])
     const [searchQuery, setSearchQuery] = useState('')
     const [selectedCategory, setSelectedCategory] = useState<string[]>([])
 
@@ -32,16 +28,11 @@ export function Home() {
         itemsPerPage: 12,
     })
 
-    const logged_in = cookie.access_token
-    const destination = logged_in ? '/user' : '/sign_in'
-    const user_button = logged_in ? 'Go to Profile' : 'Authorization'
-    const finalSearchQuery = `results/?search=${searchQuery}${
+    const finalSearchQuery = `/results?search=${searchQuery}${
         selectedCategory.length > 0
             ? `&categories=${selectedCategory.join(',')}`
             : ''
     }`
-    console.log(`finalSearchQuery: ${finalSearchQuery}`)
-    const logoutMutation = useLogout()
 
     const handleSearchInputChange = (
         e: React.ChangeEvent<HTMLInputElement>
@@ -49,18 +40,6 @@ export function Home() {
         setSearchQuery(e.target.value)
     }
 
-    const handleLogout = async (e: React.FormEvent) => {
-        e.preventDefault()
-        try {
-            const status = await logoutMutation.mutateAsync()
-            if (status === 205) {
-                removeCookie('access_token', { path: '/' })
-                removeCookie('refresh_token', { path: '/' })
-            }
-        } catch (err) {
-            console.error('Logout failed:', err)
-        }
-    }
     const handleCategoryChange = (categoryName: string) => {
         if (selectedCategory.includes(categoryName)) {
             setSelectedCategory(
@@ -74,146 +53,280 @@ export function Home() {
     const handlePageChange = (page: number) => {
         setPagination((prev) => ({ ...prev, currentPage: page }))
     }
-    //#region  HTML
+
     return (
         <>
-            <div>
-                <Link to={destination}>
-                    <button
-                        onClick={() =>
-                            console.log(`redirected to ${destination}`)
-                        }
-                    >
-                        {user_button}
-                    </button>
-                </Link>
-                <form onSubmit={handleLogout}>
-                    {logged_in && (
-                        <button
-                            type="submit"
-                            disabled={logoutMutation.isPending}
-                        >
-                            {logoutMutation.isPending
-                                ? 'logging out...'
-                                : 'logout'}
-                        </button>
-                    )}
-                </form>
-            </div>
+            <Header />
 
-            {/* Hero секция с поиском */}
-            <section>
-                <h1>Изучайте программирование с нуля</h1>
-                <div>
-                    <input
-                        type="text"
-                        placeholder="Поиск курсов по языкам, технологиям..."
-                        value={searchQuery}
-                        onChange={handleSearchInputChange}
-                    />
-                    <Link to={finalSearchQuery}>
-                        <button>Найти</button>
-                    </Link>
+            {/* Hero section with search */}
+            <section className="hero-bg-animated text-white py-5" style={{
+                minHeight: '600px',
+                display: 'flex',
+                alignItems: 'center',
+                position: 'relative',
+                overflow: 'hidden'
+            }}>
+                <div className="container text-center" style={{ position: 'relative', zIndex: 10 }}>
+                    <div className="mb-4">
+                        <span className="badge bg-light text-primary px-4 py-2 mb-3" style={{
+                            fontSize: '0.9rem',
+                            borderRadius: '50px',
+                            backdropFilter: 'blur(10px)',
+                            background: 'rgba(255, 255, 255, 0.9)'
+                        }}>
+                            🚀 Start Your IT Journey Today
+                        </span>
+                    </div>
+                    <h1 className="display-2 fw-bold mb-4 fade-in" style={{
+                        textShadow: '0 4px 20px rgba(0,0,0,0.2)',
+                        letterSpacing: '-0.02em'
+                    }}>
+                        Learn Programming <br />
+                        <span style={{
+                            background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            backgroundClip: 'text'
+                        }}>from Scratch</span>
+                    </h1>
+                    <div className="row justify-content-center fade-in-scale mb-4" style={{ animationDelay: '0.2s' }}>
+                        <div className="col-lg-7">
+                            <div className="input-group input-group-lg shadow-lg" style={{
+                                borderRadius: '1rem',
+                                overflow: 'hidden',
+                                background: 'white'
+                            }}>
+                                <input
+                                    type="text"
+                                    className="form-control border-0"
+                                    placeholder="Search for courses by languages, technologies..."
+                                    value={searchQuery}
+                                    onChange={handleSearchInputChange}
+                                    style={{
+                                        padding: '1.2rem 1.5rem',
+                                        fontSize: '1.1rem'
+                                    }}
+                                />
+                                <Link to={finalSearchQuery} className="btn btn-warning fw-bold border-0" style={{
+                                    padding: '1.2rem 2.5rem',
+                                    background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
+                                    fontSize: '1.1rem'
+                                }}>
+                                    🔍 Find Courses
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="d-flex justify-content-center gap-4 fade-in" style={{ animationDelay: '0.3s' }}>
+                        <div className="text-center">
+                            <h3 className="fw-bold mb-1">1000+</h3>
+                            <p className="mb-0 small">Courses</p>
+                        </div>
+                        <div className="text-center">
+                            <h3 className="fw-bold mb-1">50K+</h3>
+                            <p className="mb-0 small">Students</p>
+                        </div>
+                        <div className="text-center">
+                            <h3 className="fw-bold mb-1">4.8★</h3>
+                            <p className="mb-0 small">Average Rating</p>
+                        </div>
+                    </div>
                 </div>
             </section>
 
-            {/* Категории курсов  */}
-            <section>
-                <h2>Категории</h2>
-                <div>
-                    {categories?.data.categories.map((category) => (
-                        <button
-                            key={category}
-                            onClick={() => handleCategoryChange(category)}
-                        >
-                            {category}
-                        </button>
-                    ))}
-                </div>
-            </section>
-
-            {/* Популярные курсы */}
-            <section>
-                <h2>🔥 Самые популярные курсы</h2>
-                {isPopularLoading ? (
-                    <div>Загрузка популярных курсов...</div>
-                ) : popularCourses?.data.courses.length ? (
-                    <div>
-                        {popularCourses.data.courses.map((course) => (
-                            <CourseCard
-                                key={course.id}
-                                course={course}
-                                isPopular={true}
-                            />
+            {/* Course categories */}
+            <section className="py-5" style={{
+                background: 'rgba(255, 255, 255, 0.7)',
+                backdropFilter: 'blur(10px)'
+            }}>
+                <div className="container">
+                    <div className="text-center mb-5">
+                        <h2 className="mb-3" style={{
+                            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            backgroundClip: 'text',
+                            fontSize: '2.5rem',
+                            fontWeight: '800'
+                        }}>📚 Popular Categories</h2>
+                        <p className="text-muted">Choose from our wide range of programming courses</p>
+                    </div>
+                    <div className="d-flex flex-wrap justify-content-center gap-3">
+                        {categories?.data.categories.map((category) => (
+                            <button
+                                key={category}
+                                className={`btn ${selectedCategory.includes(category) ? 'btn-primary' : 'btn-outline-primary'} rounded-pill px-4 py-2`}
+                                onClick={() => handleCategoryChange(category)}
+                                style={{
+                                    fontSize: '1rem',
+                                    fontWeight: '600',
+                                    transition: 'all 0.3s ease'
+                                }}
+                            >
+                                {category}
+                            </button>
                         ))}
                     </div>
-                ) : (
-                    <div>Нет популярных курсов</div>
-                )}
+                </div>
             </section>
 
-            {/* Фильтры */}
-            <section>
-                <select>
-                    <option value="">Все языки</option>
-                    <option value="javascript">JavaScript</option>
-                    <option value="python">Python</option>
-                    <option value="java">Java</option>
-                </select>
-                <select>
-                    <option value="">Все уровни</option>
-                    <option value="beginner">Начинающий</option>
-                    <option value="intermediate">Средний</option>
-                    <option value="advanced">Продвинутый</option>
-                </select>
-                <button>Применить фильтры</button>
-            </section>
-
-            {/* Все курсы */}
-            <section>
-                <h2>Все курсы по программированию</h2>
-                {isAllCoursesLoading ? (
-                    <div>Загрузка курсов...</div>
-                ) : allCourses?.data.courses.length ? (
-                    <>
+            {/* Popular courses */}
+            <section className="py-5">
+                <div className="container">
+                    <div className="d-flex justify-content-between align-items-center mb-5">
                         <div>
-                            {allCourses.data.courses.map((course) => (
-                                <CourseCard key={course.id} course={course} />
+                            <h2 className="mb-2" style={{
+                                background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+                                WebkitBackgroundClip: 'text',
+                                WebkitTextFillColor: 'transparent',
+                                backgroundClip: 'text',
+                                fontSize: '2.5rem',
+                                fontWeight: '800'
+                            }}>🔥 Most Popular Courses</h2>
+                            <p className="text-muted mb-0">Trending courses this month</p>
+                        </div>
+                        <Link to="/results" className="btn btn-outline-primary rounded-pill px-4">
+                            All Courses →
+                        </Link>
+                    </div>
+                    {isPopularLoading ? (
+                        <div className="text-center py-5">
+                            <div className="spinner-border text-primary" role="status">
+                                <span className="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    ) : popularCourses?.data.courses.length ? (
+                        <div className="row g-4">
+                            {popularCourses.data.courses.slice(0, 3).map((course) => (
+                                <div key={course.id} className="col-lg-4 col-md-6">
+                                    <CourseCard
+                                        course={course}
+                                        isPopular={true}
+                                    />
+                                </div>
                             ))}
                         </div>
-                        <Pagination
-                            currentPage={pagination.currentPage}
-                            totalPages={pagination.totalPages}
-                            onPageChange={handlePageChange}
-                        />
-                    </>
-                ) : (
-                    <div>Курсы не найдены</div>
-                )}
+                    ) : (
+                        <div className="alert alert-info">No popular courses</div>
+                    )}
+                </div>
             </section>
 
-            {/* Дополнительные секции */}
-            <section>
-                <h2>Почему выбирают нас?</h2>
-                <div>
-                    <div>
-                        <h3>🎯 Практика</h3>
-                        <p>Реальные проекты в каждом курсе</p>
+            {/* All courses */}
+            <section className="py-5" style={{
+                background: 'rgba(255, 255, 255, 0.7)',
+                backdropFilter: 'blur(10px)'
+            }}>
+                <div className="container">
+                    <div className="text-center mb-5">
+                        <h2 style={{
+                            background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            backgroundClip: 'text',
+                            fontSize: '2.5rem',
+                            fontWeight: '800'
+                        }}>All Programming Courses</h2>
+                        <p className="text-muted">Explore our complete collection</p>
                     </div>
-                    <div>
-                        <h3>👨‍🏫 Наставники</h3>
-                        <p>Поддержка опытных разработчиков</p>
+                    
+                    {isAllCoursesLoading ? (
+                        <div className="text-center py-5">
+                            <div className="spinner-border text-primary" role="status">
+                                <span className="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    ) : allCourses?.data.courses.length ? (
+                        <>
+                            <div className="row g-4">
+                                {allCourses.data.courses.map((course) => (
+                                    <div key={course.id} className="col-lg-3 col-md-6">
+                                        <CourseCard course={course} />
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="mt-5">
+                                <Pagination
+                                    currentPage={pagination.currentPage}
+                                    totalPages={pagination.totalPages}
+                                    onPageChange={handlePageChange}
+                                />
+                            </div>
+                        </>
+                    ) : (
+                        <div className="alert alert-warning">No courses found</div>
+                    )}
+                </div>
+            </section>
+
+            {/* Benefits */}
+            <section className="py-5 mb-5">
+                <div className="container">
+                    <div className="text-center mb-5">
+                        <h2 style={{
+                            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            backgroundClip: 'text',
+                            fontSize: '2.5rem',
+                            fontWeight: '800'
+                        }}>Why Choose Us?</h2>
+                        <p className="text-muted">Everything you need to succeed in programming</p>
                     </div>
-                    <div>
-                        <h3>📱 Доступность</h3>
-                        <p>Учитесь с любого устройства</p>
-                    </div>
-                    <div>
-                        <h3>💼 Карьера</h3>
-                        <p>Помощь с трудоустройством</p>
+                    <div className="row g-4">
+                        <div className="col-lg-3 col-md-6 text-center fade-in-scale">
+                            <div className="card h-100 border-0 shadow-sm">
+                                <div className="card-body p-4">
+                                    <div className="mb-3 d-inline-block p-3 rounded-circle" style={{ 
+                                        fontSize: '3rem',
+                                        background: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)'
+                                    }}>🎯</div>
+                                    <h3 className="h5 fw-bold mb-3">Practice-Oriented</h3>
+                                    <p className="text-muted mb-0">Real projects in every course to build your portfolio</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-lg-3 col-md-6 text-center fade-in-scale" style={{ animationDelay: '0.1s' }}>
+                            <div className="card h-100 border-0 shadow-sm">
+                                <div className="card-body p-4">
+                                    <div className="mb-3 d-inline-block p-3 rounded-circle" style={{ 
+                                        fontSize: '3rem',
+                                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+                                    }}>👨‍🏫</div>
+                                    <h3 className="h5 fw-bold mb-3">Expert Mentors</h3>
+                                    <p className="text-muted mb-0">Support from experienced developers whenever you need</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-lg-3 col-md-6 text-center fade-in-scale" style={{ animationDelay: '0.2s' }}>
+                            <div className="card h-100 border-0 shadow-sm">
+                                <div className="card-body p-4">
+                                    <div className="mb-3 d-inline-block p-3 rounded-circle" style={{ 
+                                        fontSize: '3rem',
+                                        background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'
+                                    }}>📱</div>
+                                    <h3 className="h5 fw-bold mb-3">Full Accessibility</h3>
+                                    <p className="text-muted mb-0">Learn from any device, anywhere, anytime</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-lg-3 col-md-6 text-center fade-in-scale" style={{ animationDelay: '0.3s' }}>
+                            <div className="card h-100 border-0 shadow-sm">
+                                <div className="card-body p-4">
+                                    <div className="mb-3 d-inline-block p-3 rounded-circle" style={{ 
+                                        fontSize: '3rem',
+                                        background: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)'
+                                    }}>💼</div>
+                                    <h3 className="h5 fw-bold mb-3">Career Support</h3>
+                                    <p className="text-muted mb-0">Job placement assistance and career guidance</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
+
+            <Footer />
         </>
     )
 }

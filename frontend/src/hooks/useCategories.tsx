@@ -21,6 +21,6 @@ export const getCategories = () => {
             )
         },
         retry: 1,
-        staleTime: 5 * 60 * 1000, // данные считаются свежими 5 минут
+        staleTime: 5 * 60 * 1000, // data is considered fresh for 5 minutes
     })
 }

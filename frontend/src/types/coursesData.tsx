@@ -23,6 +23,7 @@ export interface CourseData {
     is_limited: boolean
     difficulty_level: string
     duration_hours: number
+    category: string
 }
 
 export interface review {

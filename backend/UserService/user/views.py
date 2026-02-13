@@ -122,7 +122,7 @@ class LogoutAPIView(APIView):
 
 class ShowUsersAPIView(APIView):
     """API endpoint для получения списка всех пользователей (только для админов)"""
-    #permission_classes = [IsAuthenticated, IsAdminUser]
+    permission_classes = [IsAuthenticated, IsAdminUser]
 
     def get(self, request):
         users = User.objects.all()
