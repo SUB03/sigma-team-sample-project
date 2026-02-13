@@ -1,9 +1,4 @@
 import { Link } from 'react-router-dom'
-<<<<<<< HEAD
-=======
-import { useCookies } from 'react-cookie'
-import { useLogoutMutation } from '../mutations/useLogoutMutation.tsx'
->>>>>>> 5dce28cffee02be356f0b62e36bdafa10a5303fd
 import { useState } from 'react'
 
 import CourseCard from '../components/CourseCard'
@@ -16,12 +11,10 @@ import {
     getPopularCoursesQuery,
 } from '../hooks/useCourses.tsx'
 import { getCategories } from '../hooks/useCategories.tsx'
-import { useAuth } from '../contexts/AuthContext.tsx'
 
 export function Home() {
     const [searchQuery, setSearchQuery] = useState('')
     const [selectedCategory, setSelectedCategory] = useState<string[]>([])
-    const { logout } = useAuth()
 
     const { data: popularCourses, isLoading: isPopularLoading } =
         getPopularCoursesQuery()
@@ -40,11 +33,6 @@ export function Home() {
             ? `&categories=${selectedCategory.join(',')}`
             : ''
     }`
-<<<<<<< HEAD
-=======
-    console.log(`finalSearchQuery: ${finalSearchQuery}`)
-    const logoutMutation = useLogoutMutation()
->>>>>>> 5dce28cffee02be356f0b62e36bdafa10a5303fd
 
     const handleSearchInputChange = (
         e: React.ChangeEvent<HTMLInputElement>
@@ -52,20 +40,6 @@ export function Home() {
         setSearchQuery(e.target.value)
     }
 
-<<<<<<< HEAD
-=======
-    const handleLogout = async (e: React.FormEvent) => {
-        e.preventDefault()
-        try {
-            await logoutMutation.mutateAsync()
-            removeCookie('access_token', { path: '/' })
-            removeCookie('refresh_token', { path: '/' })
-            logout()
-        } catch (err) {
-            console.error('Logout failed:', err)
-        }
-    }
->>>>>>> 5dce28cffee02be356f0b62e36bdafa10a5303fd
     const handleCategoryChange = (categoryName: string) => {
         if (selectedCategory.includes(categoryName)) {
             setSelectedCategory(

@@ -44,20 +44,14 @@ function Pagination({
     }, [currentPage, totalPages, maxVisiblePages])
 
     const handlePageClick = (page: number) => {
-<<<<<<< HEAD
         if (page >= 1 && page <= totalPages && page !== currentPage) {
-            onPageChange(page)
-=======
-        if (page !== currentPage && page >= 1 && page <= totalPages) {
-            onPageChange && onPageChange(page)
->>>>>>> 5dce28cffee02be356f0b62e36bdafa10a5303fd
+            onPageChange?.(page)
         }
     }
 
     if (totalPages <= 1) return null
 
     return (
-<<<<<<< HEAD
         <nav aria-label="Page navigation">
             <ul className="pagination justify-content-center" style={{ gap: '0.5rem' }}>
                 <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
@@ -101,29 +95,11 @@ function Pagination({
                                     border: 'none',
                                     background: 'transparent'
                                 }}>...</span>
-=======
-        <div>
-            <nav aria-label="Навигация по страницам">
-                <ul>
-                    {/* Первая страница */}
-                    {showFirstLast &&
-                        totalPages > maxVisiblePages &&
-                        currentPage > 1 && (
-                            <li>
-                                <button
-                                    onClick={handleFirstClick}
-                                    aria-label="Первая страница"
-                                    disabled={currentPage === 1}
-                                >
-                                    <span>Первая</span>
-                                </button>
->>>>>>> 5dce28cffee02be356f0b62e36bdafa10a5303fd
                             </li>
                         )}
                     </>
                 )}
 
-<<<<<<< HEAD
                 {pages.map((page) => (
                     <li key={page} className={`page-item ${page === currentPage ? 'active' : ''}`}>
                         <button 
@@ -142,113 +118,6 @@ function Pagination({
                                 boxShadow: page === currentPage 
                                     ? '0 4px 15px rgba(102, 126, 234, 0.3)' 
                                     : 'none'
-=======
-                    {/* Предыдущая страница */}
-                    {showPrevNext && (
-                        <li>
-                            <button
-                                onClick={handlePrevClick}
-                                aria-label="Предыдущая страница"
-                                disabled={currentPage === 1}
-                            >
-                                <span>Назад</span>
-                            </button>
-                        </li>
-                    )}
-
-                    {/* Многоточие в начале */}
-                    {pages[0] > 1 && (
-                        <li>
-                            <span>...</span>
-                        </li>
-                    )}
-
-                    {/* Номера страниц */}
-                    {pages.map((page) => (
-                        <li key={page}>
-                            <button
-                                onClick={() => handlePageClick(page)}
-                                aria-label={`Страница ${page}`}
-                                aria-current={
-                                    page === currentPage ? 'page' : undefined
-                                }
-                            >
-                                {page}
-                            </button>
-                        </li>
-                    ))}
-
-                    {/* Многоточие в конце */}
-                    {pages[pages.length - 1] < totalPages && (
-                        <li>
-                            <span>...</span>
-                        </li>
-                    )}
-
-                    {/* Следующая страница */}
-                    {showPrevNext && (
-                        <li>
-                            <button
-                                onClick={handleNextClick}
-                                aria-label="Следующая страница"
-                                disabled={currentPage === totalPages}
-                            >
-                                <span>Далее</span>
-                            </button>
-                        </li>
-                    )}
-
-                    {/* Последняя страница */}
-                    {showFirstLast &&
-                        totalPages > maxVisiblePages &&
-                        currentPage < totalPages && (
-                            <li>
-                                <button
-                                    onClick={handleLastClick}
-                                    aria-label="Последняя страница"
-                                    disabled={currentPage === totalPages}
-                                >
-                                    <span>Последняя</span>
-                                </button>
-                            </li>
-                        )}
-                </ul>
-
-                {/* Показ информации о текущей странице */}
-                <div>
-                    <span>
-                        Страница <strong>{currentPage}</strong> из{' '}
-                        <strong>{totalPages}</strong>
-                    </span>
-                    <div>
-                        <label htmlFor="page-input">Перейти:</label>
-                        <input
-                            id="page-input"
-                            type="number"
-                            min="1"
-                            max={totalPages}
-                            defaultValue={currentPage}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter') {
-                                    const page = parseInt(
-                                        (e.target as HTMLInputElement).value
-                                    )
-                                    if (page >= 1 && page <= totalPages) {
-                                        handlePageClick(page)
-                                    }
-                                }
-                            }}
-                        />
-                        <button
-                            onClick={() => {
-                                const input = document.getElementById(
-                                    'page-input'
-                                ) as HTMLInputElement
-                                const page = parseInt(input.value)
-                                if (page >= 1 && page <= totalPages) {
-                                    handlePageClick(page)
-                                }
->>>>>>> 5dce28cffee02be356f0b62e36bdafa10a5303fd
                             }}
                         >
                             {page}

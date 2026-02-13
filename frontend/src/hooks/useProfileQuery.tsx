@@ -17,11 +17,7 @@ export const getProfileQuery = () => {
         queryFn: async () => {
             return $api.get<UserProfile>('/user/profile/')
         },
-<<<<<<< HEAD
         retry: 1,
         staleTime: 5 * 60 * 1000, // data is considered fresh for 5 minutes
-=======
-        staleTime: 5 * 60 * 1000, // данные считаются свежими 5 минут
->>>>>>> 5dce28cffee02be356f0b62e36bdafa10a5303fd
     })
 }

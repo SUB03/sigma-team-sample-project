@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useCookies } from 'react-cookie'
-import { useLogout } from '../mutations/logoutMutation'
+import { useLogoutMutation } from '../mutations/useLogoutMutation'
 import { useState } from 'react'
 
 export function Header() {
@@ -10,15 +10,15 @@ export function Header() {
     ])
     const [searchQuery, setSearchQuery] = useState('')
     const navigate = useNavigate()
-    const logoutMutation = useLogout()
+    const logoutMutation = useLogoutMutation()
 
     const logged_in = cookie.access_token
 
     const handleLogout = async (e: React.FormEvent) => {
         e.preventDefault()
         try {
-            const status = await logoutMutation.mutateAsync()
-            if (status === 205) {
+            const response = await logoutMutation.mutateAsync()
+            if (response.status === 205) {
                 removeCookie('access_token', { path: '/' })
                 removeCookie('refresh_token', { path: '/' })
                 navigate('/')
