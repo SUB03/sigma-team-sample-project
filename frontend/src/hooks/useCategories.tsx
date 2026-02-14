@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { $api } from '../api'
+import { $api, course_url } from '../api'
 
 export interface CategoriesData {
     count: number
@@ -11,7 +11,7 @@ export const getCategories = () => {
         queryKey: ['categories'],
         queryFn: async () => {
             return $api.get<CategoriesData>(
-                '/api/courses/categories/',
+                `${course_url}/courses/categories/`,
                 {
                     headers: {
                         'Content-Type': 'application/json',
