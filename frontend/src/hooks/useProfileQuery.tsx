@@ -15,7 +15,7 @@ export const getProfileQuery = () => {
     return useQuery({
         queryKey: ['profileData'],
         queryFn: async () => {
-            return $api.get<UserProfile>('/user/profile/')
+            return $api.get<UserProfile>('/profile/')
         },
         retry: 1,
         staleTime: 5 * 60 * 1000, // data is considered fresh for 5 minutes

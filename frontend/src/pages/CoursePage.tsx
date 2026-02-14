@@ -58,9 +58,13 @@ export function CoursePage() {
 
     const { data: purchaseCheckResponse, isLoading: purchaseCheckLoading } =
         usePurchaseCheckQuery(courseId, isAuthenticated)
+    
+    const hasPurchased = purchaseCheckResponse?.data.has_purchased || false
+    
     const { data: userReviewResponse } = useGetMyReview(
         courseId,
-        isAuthenticated
+        isAuthenticated,
+        hasPurchased
     )
     const {
         data: reviewsResponse,
@@ -175,8 +179,6 @@ export function CoursePage() {
         'Intermediate': 'warning',
         'Advanced': 'danger'
     }
-
-    const hasPurchased = purchaseCheckResponse?.data.has_purchased
 
     return (
         <>
@@ -336,7 +338,7 @@ export function CoursePage() {
                             }}>
                                 Student Reviews
                             </h2>
-                            {isAuthenticated && !userReviewResponse && !showReviewForm && (
+                            {isAuthenticated && hasPurchased && !userReviewResponse && !showReviewForm && (
                                 <button 
                                     className="btn btn-primary"
                                     onClick={() => setShowReviewForm(true)}
@@ -353,7 +355,7 @@ export function CoursePage() {
                         </div>
 
                         {/* User's Review or Review Form */}
-                        {isAuthenticated && (userReviewResponse || showReviewForm || editReview) && (
+                        {isAuthenticated && hasPurchased && (userReviewResponse || showReviewForm || editReview) && (
                             <div className="card border-0 mb-4" style={{
                                 background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%)',
                                 borderRadius: '16px',
@@ -365,10 +367,10 @@ export function CoursePage() {
                                         <div className="d-flex align-items-center gap-1 mb-2">
                                             {[...Array(5)].map((_, i) => (
                                                 <span key={i} style={{
-                                                    fontSize: '1.2rem',
-                                                    color: i < userReviewResponse.data.rating ? '#fbbf24' : '#e0e0e0'
+                                                    fontSize: '1.5rem',
+                                                    color: i < userReviewResponse.data.rating ? '#fbbf24' : '#d1d5db'
                                                 }}>
-                                                    ⭐
+                                                    ★
                                                 </span>
                                             ))}
                                         </div>
@@ -515,10 +517,10 @@ export function CoursePage() {
                                                     <div className="d-flex align-items-center gap-1">
                                                         {[...Array(5)].map((_, i) => (
                                                             <span key={i} style={{
-                                                                fontSize: '1.2rem',
-                                                                color: i < review.rating ? '#fbbf24' : '#e0e0e0'
+                                                                fontSize: '1.5rem',
+                                                                color: i < review.rating ? '#fbbf24' : '#d1d5db'
                                                             }}>
-                                                                ⭐
+                                                                ★
                                                             </span>
                                                         ))}
                                                     </div>

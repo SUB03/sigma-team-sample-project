@@ -99,7 +99,7 @@ export const getReviewsQuery = (course_id: number, page: number) => {
     })
 }
 
-export const useGetMyReview = (course_id: number, isAuthenticated: boolean) => {
+export const useGetMyReview = (course_id: number, isAuthenticated: boolean, hasPurchased: boolean = false) => {
     return useQuery({
         queryKey: ['myReview', course_id],
         queryFn: async () => {
@@ -109,6 +109,6 @@ export const useGetMyReview = (course_id: number, isAuthenticated: boolean) => {
         },
         retryDelay: retryDelay,
         staleTime: staleTime,
-        enabled: isAuthenticated,
+        enabled: isAuthenticated && hasPurchased,
     })
 }

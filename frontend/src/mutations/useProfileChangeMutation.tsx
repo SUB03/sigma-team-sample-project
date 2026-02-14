@@ -5,7 +5,7 @@ import type { UserProfileData } from '../types/userProfileData'
 export const useProfileChangeMutation = () => {
     return useMutation({
         mutationFn: async (userData: UserProfileData) => {
-            return await $api.put('user/profile/', userData)
+            return await $api.put('/profile/', userData)
         },
         onSuccess: (data) => {
             console.log('profile update successful:', data)

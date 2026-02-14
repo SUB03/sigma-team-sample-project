@@ -11,7 +11,7 @@ export const getCategories = () => {
         queryKey: ['categories'],
         queryFn: async () => {
             return $api.get<CategoriesData>(
-                'http://localhost:8003/courses/categories/',
+                '/api/courses/categories/',
                 {
                     headers: {
                         'Content-Type': 'application/json',

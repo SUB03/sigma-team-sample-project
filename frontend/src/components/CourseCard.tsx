@@ -25,24 +25,6 @@ function CourseCard({ course, isPopular = false }: CourseCardProps) {
         return `€${price.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
     }
 
-    const renderStars = (rating: number) => {
-        const fullStars = Math.floor(rating)
-        const hasHalfStar = rating % 1 >= 0.5
-
-        return (
-            <div className="d-inline-flex gap-1" style={{ color: '#fbbf24' }}>
-                {[...Array(5)].map((_, index) => {
-                    if (index < fullStars) {
-                        return <span key={index}>★</span>
-                    } else if (index === fullStars && hasHalfStar) {
-                        return <span key={index}>★</span>
-                    }
-                    return <span key={index} style={{ color: '#d1d5db' }}>★</span>
-                })}
-            </div>
-        )
-    }
-
     const getLevelColor = (level: string) => {
         const colors: Record<string, string> = {
             'Beginner': 'success',
@@ -162,11 +144,13 @@ function CourseCard({ course, isPopular = false }: CourseCardProps) {
                     </div>
                 )}
 
-                {/* Rating and reviews */}
-                {popularity !== undefined && (
+                {/* Students enrolled */}
+                {popularity !== undefined && popularity > 0 && (
                     <div className="d-flex align-items-center gap-2 mb-3">
-                        {renderStars(popularity)}
-                        <span className="fw-bold" style={{ color: '#fbbf24' }}>{popularity.toFixed(1)}</span>
+                        <span style={{ fontSize: '1.2rem' }}>👥</span>
+                        <span className="text-muted" style={{ fontSize: '0.9rem' }}>
+                            <span className="fw-bold text-dark">{popularity.toLocaleString()}</span> students
+                        </span>
                     </div>
                 )}
 
